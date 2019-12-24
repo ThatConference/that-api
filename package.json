@@ -1,0 +1,76 @@
+{
+  "name": "@thatconference/api",
+  "description": "THAT-API shared library for all microservices",
+  "version": "1.0.0",
+  "main": "index.js",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/"
+  },
+  "scripts": {
+    "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
+    "postbuild": "cp ./package.json ./package-lock.json ./__build__",
+    "dev": "nodemon -e js --watch src --ignore '*.test.js, *.tests.js' --exec npm run build",
+    "test": "jest --coverage",
+    "lint": "eslint 'src/**/*.js'",
+    "validate": "concurrently npm:test npm:lint npm:build ",
+    "prenpm:publish": "npm run build",
+    "npm:publish": "npm publish ./__build__"
+  },
+  "engines": {
+    "node": "^10"
+  },
+  "dependencies": {
+    "apollo-server": "^2.9.14",
+    "auth0": "^2.20.0",
+    "debug": "^4.1.1",
+    "jsonwebtoken": "^8.5.1",
+    "jwks-rsa": "^1.6.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.7.7",
+    "@babel/core": "^7.7.7",
+    "@babel/node": "^7.7.7",
+    "@babel/preset-env": "^7.7.7",
+    "@babel/register": "^7.7.7",
+    "babel-core": "^6.26.3",
+    "babel-jest": "^24.9.0",
+    "concurrently": "^5.0.2",
+    "dotenv": "^8.2.0",
+    "eslint": "^6.8.0",
+    "eslint-config-airbnb": "^18.0.1",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-config-prettier": "^6.7.0",
+    "eslint-plugin-babel": "^5.3.0",
+    "eslint-plugin-import": "^2.19.1",
+    "eslint-plugin-jest": "^23.1.1",
+    "eslint-plugin-prettier": "^3.1.2",
+    "husky": "^3.1.0",
+    "jest-cli": "^24.9.0",
+    "nodemon": "^2.0.2",
+    "prettier-eslint": "^9.0.1",
+    "prettier-eslint-cli": "^5.0.0"
+  },
+  "license": "gpl-3.0",
+  "keywords": [
+    "node, react, auth0, graphql"
+  ],
+  "homepage": "https://www.thatconference.com",
+  "bugs": {
+    "url": "https://github.com/ThatConference/that-api/issues"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "verbose": true,
+    "rootDir": "./src",
+    "coverageDirectory": "../__testCoverage__"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thatconference/that-api.git",
+    "husky": {
+      "hooks": {
+        "pre-push": "npm run validate"
+      }
+    }
+  }
+}
