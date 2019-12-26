@@ -1,4 +1,4 @@
-import jwt from 'jsonwebtoken';
+import jsonwebtoken from 'jsonwebtoken';
 import debug from 'debug';
 import jwksClient from 'jwks-rsa';
 import { AuthenticationError } from 'apollo-server';
@@ -9,7 +9,7 @@ function configMissing(configKey) {
   throw new Error(`missing required .env setting for ${configKey}`);
 }
 
-function jwtVerify() {
+function jwt() {
   const requiredConfig = {
     jwksUri: process.env.AUTH0_JWKS_URI || configMissing('AUTH0_JWKS_URI'),
     audience: process.env.AUTH0_AUDIENCE || configMissing('AUTH0_AUDIENCE'),
@@ -60,7 +60,7 @@ function jwtVerify() {
         });
       }
 
-      jwt.verify(token, getKey, options, (e, t) => {
+      jsonwebtoken.verify(token, getKey, options, (e, t) => {
         dlog('decoded token %o', t);
         if (e) reject(e);
 
@@ -72,4 +72,4 @@ function jwtVerify() {
   return { verify };
 }
 
-export default jwtVerify;
+export default jwt;
