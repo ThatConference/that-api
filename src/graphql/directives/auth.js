@@ -5,7 +5,7 @@
 import { SchemaDirectiveVisitor, ForbiddenError } from 'apollo-server';
 import debug from 'debug';
 
-const dlog = debug('that:api:members:directive:auth');
+const dlog = debug('that:api:directive:auth');
 
 class AuthDirective extends SchemaDirectiveVisitor {
   visitObject(type) {

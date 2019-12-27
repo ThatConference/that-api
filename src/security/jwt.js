@@ -3,7 +3,7 @@ import debug from 'debug';
 import jwksClient from 'jwks-rsa';
 import { AuthenticationError } from 'apollo-server';
 
-const dlog = debug('that:lib:jwt');
+const dlog = debug('that:api:jwt');
 
 function configMissing(configKey) {
   throw new Error(`missing required .env setting for ${configKey}`);
