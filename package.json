@@ -1,11 +1,8 @@
 {
   "name": "@thatconference/api",
   "description": "THAT-API shared library for all microservices",
-  "version": "1.1.0",
+  "version": "1.2.1",
   "main": "index.js",
-  "publishConfig": {
-    "registry": "https://npm.pkg.github.com/"
-  },
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
     "postbuild": "cp ./package.json ./package-lock.json ./__build__",
@@ -14,7 +11,7 @@
     "lint": "eslint 'src/**/*.js'",
     "validate": "concurrently npm:test npm:lint npm:build ",
     "prenpm:publish": "npm run build",
-    "npm:publish": "npm publish ./__build__"
+    "npm:publish": "npm publish ./__build__ --access public"
   },
   "engines": {
     "node": "^10"
