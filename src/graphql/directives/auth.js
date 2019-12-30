@@ -31,6 +31,7 @@ class AuthDirective extends SchemaDirectiveVisitor {
       dlog('for each field');
 
       const field = fields[fieldName];
+      // eslint-disable-next-line no-undef
       const { resolve = defaultFieldResolver } = field;
 
       field.resolve = async (...args) => {
@@ -47,8 +48,15 @@ class AuthDirective extends SchemaDirectiveVisitor {
 
         dlog('user perm %o', user.permissions);
 
+        if (!user.permissions) {
+          dlog('user does not have any permissions defined');
+          throw new ForbiddenError('this user has no permissions.');
+        }
+
         if (!user.permissions.includes(requiredRole)) {
-          dlog('user does not have required role');
+          dlog(
+            'This user does not have the required role to access the resource.',
+          );
 
           throw new ForbiddenError(
             'not authorized to perform requested action',
