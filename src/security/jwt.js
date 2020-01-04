@@ -16,15 +16,15 @@ function jwt() {
     issuer: process.env.AUTH0_ISSUER || configMissing('AUTH0_ISSUER'),
   };
 
+  const client = jwksClient({
+    cache: JSON.parse(process.env.JWKS_CACHE || true),
+    rateLimit: JSON.parse(process.env.JWKS_RATE_LIMIT || true),
+    jwksRequestsPerMinute: process.env.JWKS_RPM || 5,
+    jwksUri: requiredConfig.jwksUri,
+  });
+
   function verify(bearerToken) {
     return new Promise((resolve, reject) => {
-      const client = jwksClient({
-        cache: JSON.parse(process.env.JWKS_CACHE || true),
-        rateLimit: JSON.parse(process.env.JWKS_RATE_LIMIT || true),
-        jwksRequestsPerMinute: process.env.JWKS_RPM || 5,
-        jwksUri: requiredConfig.jwksUri,
-      });
-
       const options = {
         audience: requiredConfig.audience,
         issuer: requiredConfig.issuer,
