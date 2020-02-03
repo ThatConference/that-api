@@ -7,13 +7,13 @@
   "editor.snippetSuggestions": "top",
   "peacock.color": "red",
   "workbench.colorCustomizations": {
-    "titleBar.activeBackground": "#FF7D43",
-    "titleBar.inactiveBackground": "#FF7D43",
-    "titleBar.activeForeground": "#fff",
-    "titleBar.inactiveForeground": "#fff",
-    "statusBar.background": "#FF7D43",
-    "statusBarItem.hoverBackground": "#FF7D43",
-    "statusBar.foreground": "#fff"
+    "titleBar.activeBackground": "#ff0000",
+    "titleBar.inactiveBackground": "#ff000099",
+    "titleBar.activeForeground": "#ffffff",
+    "titleBar.inactiveForeground": "#ffffff99",
+    "statusBar.background": "#ff0000",
+    "statusBarItem.hoverBackground": "#ff3333",
+    "statusBar.foreground": "#ffffff"
   },
   "peacock.affectActivityBar": false,
   "peacock.lightForegroundColor": "#fff",
