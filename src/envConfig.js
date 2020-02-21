@@ -1,18 +1,24 @@
 import debug from 'debug';
 
-function configMissing(configKey) {
+const dlog = debug('that:api:config');
+
+function missingConfig(configKey) {
   throw new Error(`missing required .env setting for ${configKey}`);
 }
 
 function getConfig() {
-  return {
+  const config = {
     influx: {
-      token: process.env.INFLUX_TOKEN || configMissing('INFLUX_TOKEN'),
-      orgId: process.env.INFLUX_ORG_ID || configMissing('INFLUX_ORG_ID'),
-      bucketId: process.env.INFLUX_BUCKET_ID || configMissing('INFLUX_HOST'),
-      host: process.env.INFLUX_HOST || configMissing('INFLUX_BUCKET_ID'),
+      token: process.env.INFLUX_TOKEN || missingConfig('INFLUX_TOKEN'),
+      orgId: process.env.INFLUX_ORG_ID || missingConfig('INFLUX_ORG_ID'),
+      bucketId: process.env.INFLUX_BUCKET_ID || missingConfig('INFLUX_HOST'),
+      host: process.env.INFLUX_HOST || missingConfig('INFLUX_BUCKET_ID'),
     },
   };
+
+  dlog('created config %O', config);
+
+  return config;
 }
 
 export default getConfig();
