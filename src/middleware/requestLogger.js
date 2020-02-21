@@ -13,8 +13,8 @@ function requestLogger(service) {
 
     const log = {
       measurement: 'apiRequest',
-      tags: [`host=${req.headers.host},service=${service}`],
-      fields: [`ip="${clientIp}"`],
+      tags: [`ip=${clientIp},host=${req.headers.host},service=${service}`],
+      fields: [`called=1`],
     };
 
     dlog('handler %O', log);

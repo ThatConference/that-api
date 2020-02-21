@@ -1,7 +1,7 @@
 {
   "name": "@thatconference/api",
   "description": "THAT-API shared library for all microservices",
-  "version": "1.4.0",
+  "version": "1.4.1",
   "main": "index.js",
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
@@ -17,7 +17,7 @@
     "node": "^10"
   },
   "dependencies": {
-    "apollo-server": "^2.9.16",
+    "apollo-server": "^2.10.1",
     "auth0": "^2.22.0",
     "debug": "^4.1.1",
     "jsonwebtoken": "^8.5.1",

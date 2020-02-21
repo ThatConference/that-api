@@ -34,7 +34,10 @@ function influxEvents() {
   function capture({ measurement, tags, fields }) {
     dlog('capture %O', { measurement, tags, fields });
 
-    callFetch(buildLineProtocol({ measurement, tags, fields }));
+    const lineProtocol = buildLineProtocol({ measurement, tags, fields });
+    dlog('line protocol', lineProtocol);
+
+    callFetch(lineProtocol);
   }
 
   influxEventEmitter.on('error', err => {

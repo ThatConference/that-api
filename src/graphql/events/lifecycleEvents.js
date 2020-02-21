@@ -34,8 +34,13 @@ function lifecycleEvents() {
 
     const data = buildLineProtocol({
       measurement: 'executionDidStart',
-      tags: [`service=${service}`, `operationKind=${operation.operation}`],
-      fields: [`userId="${userId}"`, `queryHash="${requestContext.queryHash}"`],
+      tags: [
+        `userId=${userId}`,
+        `service=${service}`,
+        `operationKind=${operation.operation}`,
+        `queryHash=${requestContext.queryHash}`,
+      ],
+      fields: ['called=1'],
     });
 
     callFetch(data);
