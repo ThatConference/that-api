@@ -7,12 +7,12 @@
   "editor.snippetSuggestions": "top",
   "peacock.color": "red",
   "workbench.colorCustomizations": {
-    "titleBar.activeBackground": "#8800ff",
-    "titleBar.inactiveBackground": "#8800ff",
+    "titleBar.activeBackground": "#ff0000",
+    "titleBar.inactiveBackground": "#ff000099",
     "titleBar.activeForeground": "#ffffff",
     "titleBar.inactiveForeground": "#ffffff99",
-    "statusBar.background": "#8800ff",
-    "statusBarItem.hoverBackground": "#8800ff",
+    "statusBar.background": "#ff0000",
+    "statusBarItem.hoverBackground": "#ff3333",
     "statusBar.foreground": "#ffffff"
   },
   "peacock.affectActivityBar": false,
