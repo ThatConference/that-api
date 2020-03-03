@@ -17,7 +17,6 @@ function jwt() {
   };
 
   const client = jwksClient({
-    cache: JSON.parse(process.env.JWKS_CACHE || true),
     rateLimit: JSON.parse(process.env.JWKS_RATE_LIMIT || true),
     jwksRequestsPerMinute: process.env.JWKS_RPM || 5,
     jwksUri: requiredConfig.jwksUri,

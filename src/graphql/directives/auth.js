@@ -46,6 +46,11 @@ class AuthDirective extends SchemaDirectiveVisitor {
         const context = args[2];
         const { user } = context;
 
+        if (!user) {
+          dlog('no user destructured from context');
+          throw new ForbiddenError('context contains no user.');
+        }
+
         dlog('user perm %o', user.permissions);
 
         if (!user.permissions) {
