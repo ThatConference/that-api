@@ -28,7 +28,7 @@ class AuthDirective extends SchemaDirectiveVisitor {
     const fields = objectType.getFields();
 
     Object.keys(fields).forEach(fieldName => {
-      dlog('for each field');
+      dlog('for each field', fieldName);
 
       const field = fields[fieldName];
       // eslint-disable-next-line no-undef
