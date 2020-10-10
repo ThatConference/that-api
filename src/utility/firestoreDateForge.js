@@ -72,6 +72,7 @@ function earnedMeritBadges(earnedBadge) {
 }
 
 export default {
+  dateForge,
   sessions,
   members,
   events,
