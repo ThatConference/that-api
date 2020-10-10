@@ -1,6 +1,6 @@
 import debug from 'debug';
 
-const dlog = debug('that:api:events:datasources:firebase:members');
+const dlog = debug('that:api:datasources:firebase:member');
 
 const collectionName = 'members';
 
