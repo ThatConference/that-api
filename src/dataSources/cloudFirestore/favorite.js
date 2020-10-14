@@ -7,7 +7,7 @@ const dlog = debug('that:api:datasources:firebase:favorite');
 const favoriteColName = 'favorites';
 const favoriteTypes = ['member', 'session', 'community', 'event', 'partner'];
 
-function verifyFavoriteType(type) {
+function validateFavoriteType(type) {
   if (!favoriteTypes.includes(type)) {
     throw new Error(
       `Favorite type ${type} not supported. supported types: ${favoriteTypes}`,
@@ -22,7 +22,7 @@ const favorite = dbInstance => {
 
   async function findFavoriteForMember({ favoritedId, favoriteType, user }) {
     dlog('findFavoriteForMember %s, %s', favoritedId, user.sub);
-    verifyFavoriteType(favoriteType);
+    validateFavoriteType(favoriteType);
     const { docs } = await favoritesCollection
       .where('favoritedId', '==', favoritedId)
       .where('memberId', '==', user.sub)
@@ -44,7 +44,7 @@ const favorite = dbInstance => {
 
   async function addFavoriteForMember({ favoritedId, favoriteType, user }) {
     dlog('add favorite %s of %s for %s', favoritedId, favoriteType, user.sub);
-    verifyFavoriteType(favoriteType);
+    validateFavoriteType(favoriteType);
     const newFavorite = {
       memberId: user.sub,
       favoritedId,
@@ -59,17 +59,25 @@ const favorite = dbInstance => {
     };
   }
 
-  function removeFavorite({ favoritedId, user }) {
-    dlog('Remove favorite %s', favoritedId);
+  async function removeFavorite({ favoriteId, user }) {
+    dlog('Remove favorite %s', favoriteId);
 
     // Add check to verify it's this user's favorite?
+    const fav = await favoritesCollection.doc(favoriteId).get();
+    if (!fav.exists)
+      throw new Error('Provided favoriteId does not exist %s', favoriteId);
+    if (user.sub !== fav.get('memberId'))
+      throw new Error(
+        'Unable to remove favorite not owned by current member %s',
+        favoriteId,
+      );
 
-    return favoritesCollection.doc(favoritedId).delete();
+    return favoritesCollection.doc(favoriteId).delete();
   }
 
   async function getFavoriteCount({ favoritedId, favoriteType }) {
     dlog('getFavoriteCount for %s of type %s', favoritedId, favoriteType);
-    verifyFavoriteType(favoriteType);
+    validateFavoriteType(favoriteType);
     const { size } = await favoritesCollection
       .where('favoritedId', '==', favoritedId)
       .where('type', '==', favoriteType)
@@ -92,7 +100,7 @@ const favorite = dbInstance => {
       pageSize,
       cursor,
     );
-    verifyFavoriteType(favoriteType);
+    validateFavoriteType(favoriteType);
     const limit = Math.min(pageSize || 10, 100);
     let query = favoritesCollection
       .where('favoritedId', '==', favoritedId)
@@ -156,12 +164,87 @@ const favorite = dbInstance => {
     };
   }
 
+  async function getFavoritedIdsForMember({ memberId, favoriteType }) {
+    dlog('get FavoritedIds for member called %s, %s', memberId, favoriteType);
+    validateFavoriteType(favoriteType);
+    const { docs } = await favoritesCollection
+      .where('memberId', '==', memberId)
+      .where('type', '==', favoriteType)
+      .get();
+
+    return docs.map(r => ({
+      favoritedId: r.get('favoritedId'),
+      favoriteType: r.get('type'),
+    }));
+  }
+
+  async function getFavoritedIdsForMemberPaged({
+    memberId,
+    favoriteType,
+    pageSize,
+    cursor,
+  }) {
+    dlog(
+      'getFavoritedIdsForMemberPaged %s, %s, %d',
+      memberId,
+      favoriteType,
+      pageSize,
+    );
+    validateFavoriteType(favoriteType);
+    const truePSize = Math.min(pageSize || 20, 100);
+    let query = favoritesCollection
+      .where('memberId', '==', memberId)
+      .where('type', '==', favoriteType)
+      .orderBy('createdAt')
+      .limit(truePSize);
+
+    if (cursor) {
+      const curObject = Buffer.from(cursor, 'base64').toString('utf8');
+      dlog('cursor sent %s', curObject);
+      const { curCreatedAt, curFavoriteType, curMemberId } = JSON.parse(
+        curObject,
+      );
+      if (
+        !curCreatedAt ||
+        curFavoriteType !== favoriteType ||
+        curMemberId !== memberId
+      )
+        throw new Error('Invalid cursor provided, favrorites');
+
+      query = query.startAfter(new Date(curCreatedAt));
+    }
+
+    const { docs } = await query.get();
+    const favorites = docs.map(d => ({
+      ...d.data(),
+    }));
+
+    const lastdoc = favorites[favorites.length - 1];
+    let newCursor = '';
+    if (lastdoc) {
+      const cpieces = JSON.stringify({
+        curCreatedAt: dateForge.dateForge(lastdoc.createdAt),
+        curFavoriteType: favoriteType,
+        curMemberId: memberId,
+      });
+      newCursor = Buffer.from(cpieces, 'utf8').toString('base64');
+    }
+
+    return {
+      count: favorites.length,
+      cursor: newCursor,
+      favorites,
+    };
+  }
+
   return {
     findFavoriteForMember,
     addFavoriteForMember,
     removeFavorite,
     getFavoriteCount,
     getFollowersPaged,
+    getFavoritedIdsForMember,
+    getFavoritedIdsForMemberPaged,
   };
 };
 
