@@ -59,12 +59,20 @@ const favorite = dbInstance => {
     };
   }
 
-  function removeFavorite({ favoritedId, user }) {
-    dlog('Remove favorite %s', favoritedId);
+  async function removeFavorite({ favoriteId, user }) {
+    dlog('Remove favorite %s', favoriteId);
 
     // Add check to verify it's this user's favorite?
+    const fav = await favoritesCollection.doc(favoriteId).get();
+    if (!fav.exists)
+      throw new Error('Provided favoriteId does not exist %s', favoriteId);
+    if (user.sub !== fav.get('memberId'))
+      throw new Error(
+        'Unable to remove favorite not owned by current member %s',
+        favoriteId,
+      );
 
-    return favoritesCollection.doc(favoritedId).delete();
+    return favoritesCollection.doc(favoriteId).delete();
   }
 
   async function getFavoriteCount({ favoritedId, favoriteType }) {
@@ -165,8 +173,8 @@ const favorite = dbInstance => {
       .get();
 
     return docs.map(r => ({
-      id: r.id,
-      ...r.data(),
+      favoritedId: r.get('favoritedId'),
+      favoriteType: r.get('type'),
     }));
   }
 
@@ -208,7 +216,6 @@ const favorite = dbInstance => {
 
     const { docs } = await query.get();
     const favorites = docs.map(d => ({
-      id: d.id,
       ...d.data(),
     }));
 
