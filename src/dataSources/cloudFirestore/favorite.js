@@ -16,14 +16,14 @@ function validateFavoriteType(type) {
 }
 
 const favorite = dbInstance => {
-  dlog('instance created');
+  dlog('favorite cloudFirestore instance created');
 
-  const favoritesCollection = dbInstance.collection(favoriteColName);
+  const favoriteCollection = dbInstance.collection(favoriteColName);
 
   async function findFavoriteForMember({ favoritedId, favoriteType, user }) {
     dlog('findFavoriteForMember %s, %s', favoritedId, user.sub);
     validateFavoriteType(favoriteType);
-    const { docs } = await favoritesCollection
+    const { docs } = await favoriteCollection
       .where('favoritedId', '==', favoritedId)
       .where('memberId', '==', user.sub)
       .where('type', '==', favoriteType)
@@ -51,7 +51,7 @@ const favorite = dbInstance => {
       type: favoriteType,
       createdAt: new Date(),
     };
-    const newDoc = await favoritesCollection.add(newFavorite);
+    const newDoc = await favoriteCollection.add(newFavorite);
 
     return {
       id: newDoc.id,
@@ -63,7 +63,7 @@ const favorite = dbInstance => {
     dlog('Remove favorite %s', favoriteId);
 
     // Add check to verify it's this user's favorite?
-    const fav = await favoritesCollection.doc(favoriteId).get();
+    const fav = await favoriteCollection.doc(favoriteId).get();
     if (!fav.exists)
       throw new Error('Provided favoriteId does not exist %s', favoriteId);
     if (user.sub !== fav.get('memberId'))
@@ -72,13 +72,13 @@ const favorite = dbInstance => {
         favoriteId,
       );
 
-    return favoritesCollection.doc(favoriteId).delete();
+    return favoriteCollection.doc(favoriteId).delete();
   }
 
   async function getFavoriteCount({ favoritedId, favoriteType }) {
     dlog('getFavoriteCount for %s of type %s', favoritedId, favoriteType);
     validateFavoriteType(favoriteType);
-    const { size } = await favoritesCollection
+    const { size } = await favoriteCollection
       .where('favoritedId', '==', favoritedId)
       .where('type', '==', favoriteType)
       .select()
@@ -102,7 +102,7 @@ const favorite = dbInstance => {
     );
     validateFavoriteType(favoriteType);
     const limit = Math.min(pageSize || 10, 100);
-    let query = favoritesCollection
+    let query = favoriteCollection
       .where('favoritedId', '==', favoritedId)
       .where('type', '==', favoriteType)
       .orderBy('createdAt')
@@ -167,7 +167,7 @@ const favorite = dbInstance => {
   async function getFavoritedIdsForMember({ memberId, favoriteType }) {
     dlog('get FavoritedIds for member called %s, %s', memberId, favoriteType);
     validateFavoriteType(favoriteType);
-    const { docs } = await favoritesCollection
+    const { docs } = await favoriteCollection
       .where('memberId', '==', memberId)
       .where('type', '==', favoriteType)
       .get();
@@ -192,7 +192,7 @@ const favorite = dbInstance => {
     );
     validateFavoriteType(favoriteType);
     const truePSize = Math.min(pageSize || 20, 100);
-    let query = favoritesCollection
+    let query = favoriteCollection
       .where('memberId', '==', memberId)
       .where('type', '==', favoriteType)
       .orderBy('createdAt')
