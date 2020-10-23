@@ -81,6 +81,17 @@ function partners(partner) {
   return partnerOut;
 }
 
+function communities(community) {
+  dlog('communities');
+  const communityOut = community;
+  if (community.createdAt)
+    communityOut.createdAt = dateForge(community.createdAt);
+  if (community.lastUpdatedAt)
+    communityOut.lastUpdatedAt = dateForge(community.lastUpdatedAt);
+
+  return communityOut;
+}
+
 export default {
   dateForge,
   sessions,
@@ -89,4 +100,5 @@ export default {
   votes,
   earnedMeritBadges,
   partners,
+  communities,
 };
