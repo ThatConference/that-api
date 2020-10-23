@@ -53,7 +53,6 @@ export default {
 
       let result;
       if (value.toDate) {
-        dlog('converting firebase Timestamp to date');
         result = value.toDate();
       } else if (isDate(value)) {
         result = value;

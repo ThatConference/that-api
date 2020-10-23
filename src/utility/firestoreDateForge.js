@@ -2,7 +2,7 @@
 // Converts FireStore Timestamp to JavaScript Date type
 import debug from 'debug';
 
-const dlog = debug('that:api:dateforge');
+const dlog = debug('that:api:firestoreDateforge');
 
 function dateForge(date) {
   let result;
@@ -71,6 +71,16 @@ function earnedMeritBadges(earnedBadge) {
   return earnedBadgeOut;
 }
 
+function partners(partner) {
+  dlog('partners');
+  const partnerOut = partner;
+  if (partner.createdAt) partnerOut.createdAt = dateForge(partner.createdAt);
+  if (partner.lastUpdatedAt)
+    partnerOut.lastUpdatedAt = dateForge(partner.lastUpdatedAt);
+
+  return partnerOut;
+}
+
 export default {
   dateForge,
   sessions,
@@ -78,4 +88,5 @@ export default {
   events,
   votes,
   earnedMeritBadges,
+  partners,
 };
