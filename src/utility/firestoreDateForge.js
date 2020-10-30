@@ -92,6 +92,18 @@ function communities(community) {
   return communityOut;
 }
 
+function assets(asset) {
+  dlog('asset');
+  const assetOut = asset;
+  if (asset.createdAt) assetOut.createdAt = dateForge(asset.createdAt);
+  if (asset.lastUpdatedAt)
+    assetOut.lastUpdatedAt = dateForge(asset.lastUpdatedAt);
+  if (asset.startTime) assetOut.startTime = dateForge(asset.startTime);
+  if (asset.stopTime) assetOut.stopTime = dateForge(asset.stopTime);
+
+  return assetOut;
+}
+
 export default {
   dateForge,
   sessions,
