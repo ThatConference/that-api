@@ -11,8 +11,9 @@ function getConfig() {
     influx: {
       token: process.env.INFLUX_TOKEN || missingConfig('INFLUX_TOKEN'),
       orgId: process.env.INFLUX_ORG_ID || missingConfig('INFLUX_ORG_ID'),
-      bucketId: process.env.INFLUX_BUCKET_ID || missingConfig('INFLUX_HOST'),
-      host: process.env.INFLUX_HOST || missingConfig('INFLUX_BUCKET_ID'),
+      bucketId:
+        process.env.INFLUX_BUCKET_ID || missingConfig('INFLUX_BUCKET_ID'),
+      host: process.env.INFLUX_HOST || missingConfig('INFLUX_HOST'),
     },
   };
 

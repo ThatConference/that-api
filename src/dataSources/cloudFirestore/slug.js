@@ -1,7 +1,9 @@
 import debug from 'debug';
+import firestoreDateForge from '../../utility/firestoreDateForge';
 
 const dlog = debug('that:api:datasources:firebase:slug');
 const collectionName = 'slugs';
+const { dateForge } = firestoreDateForge;
 
 const slugTypes = ['member', 'session', 'partner', 'event', 'community'];
 
@@ -100,12 +102,37 @@ const slug = dbInstance => {
     return result;
   }
 
+  function getBatch(slugNames) {
+    dlog('getBatch %d', slugNames.length);
+    if (!Array.isArray(slugNames))
+      throw new Error('slugNames sent to getBatch must be an array');
+    return Promise.all(slugNames.map(sn => get(sn)));
+  }
+
+  async function findFromArray(slugNames) {
+    dlog('findFromArray, array size %d', slugNames.length);
+    if (!Array.isArray(slugNames))
+      throw new Error('slugNames sent to findFromArray must be an arrray');
+    if (slugNames.length > 10)
+      throw new Error('Too large. slugNames must contain 10 or less eletments');
+
+    const { docs } = await slugCollection.where('slug', 'in', slugNames).get();
+
+    return docs.map(doc => ({
+      id: doc.id,
+      ...doc.data(),
+      createdAt: dateForge(doc.get('createdAt')),
+    }));
+  }
+
   return {
     makeSlugDoc,
     getSlugDocRef,
     create,
     isSlugTaken,
     get,
+    getBatch,
+    findFromArray,
   };
 };
 
