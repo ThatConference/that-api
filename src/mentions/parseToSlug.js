@@ -8,10 +8,10 @@ import parseToToken from './parseToToken';
 
 const slugStore = dataSources.cloudFirestore.slug;
 
-export default async ({ text, firestore }) => {
+export default async ({ text, firestore, isRetainCase }) => {
   if (typeof text !== 'string') return [];
   const tokens = parseToToken(text);
-  const mentions = [...new Set(tokens)];
+  let mentions = [...new Set(tokens)];
 
   if (mentions.length > 10)
     throw new Error(
@@ -20,6 +20,7 @@ export default async ({ text, firestore }) => {
 
   let result = [];
   if (mentions.length > 0) {
+    if (!isRetainCase) mentions = mentions.map(m => m.toLowerCase());
     const slugs = await slugStore(firestore).findFromArray(mentions);
     result = slugs.filter(slug => slug && slug.slug);
   }
