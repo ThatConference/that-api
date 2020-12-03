@@ -1,7 +1,7 @@
 {
   "name": "@thatconference/api",
   "description": "THAT-API shared library for all microservices",
-  "version": "1.15.2",
+  "version": "1.15.3",
   "main": "index.js",
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
@@ -17,7 +17,7 @@
     "node": "^12"
   },
   "dependencies": {
-    "@google-cloud/firestore": "^4.7.2",
+    "@google-cloud/firestore": "^4.8.0",
     "apollo-server": "^2.19.0",
     "auth0": "^2.30.0",
     "debug": "^4.3.1",
@@ -46,7 +46,7 @@
     "eslint-plugin-babel": "^5.3.1",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jest": "^24.1.3",
-    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-prettier": "^3.2.0",
     "husky": "^4.3.0",
     "jest-cli": "^26.6.3",
     "nodemon": "^2.0.6",
