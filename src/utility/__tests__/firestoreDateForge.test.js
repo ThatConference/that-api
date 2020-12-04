@@ -1,6 +1,3 @@
-import { JsonWebTokenError } from 'jsonwebtoken';
-import { expressJwtSecret } from 'jwks-rsa';
-import { before } from 'lodash';
 import firestoreDateForge from '../firestoreDateForge';
 
 describe('firestoreDateForge tests', () => {
@@ -14,6 +11,12 @@ describe('firestoreDateForge tests', () => {
       it('throws on an unknown object', () => {
         expect(() => {
           const result = firestoreDateForge.dateForge({});
+        }).toThrow();
+      });
+      it('throws on a valid formated invalid date value', () => {
+        const testdate = '2020-12-04T24:54:07.747Z';
+        expect(() => {
+          const result = firestoreDateForge.dateForge(testdate);
         }).toThrow();
       });
     });
