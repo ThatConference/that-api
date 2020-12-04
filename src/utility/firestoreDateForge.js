@@ -12,15 +12,39 @@ function dateForge(date) {
     if (date.toDate) {
       // Firestore Timestamp type
       result = date.toDate();
-    } else if (date.getTime()) {
+    } else if (date instanceof Date) {
       // JS Date type
       result = date;
+    } else {
+      // unknown date type
+      result = 'Invalid Date';
     }
   } else if (typeof date === 'string') {
     result = new Date(date);
   }
+  if (result.toString() === 'Invalid Date')
+    throw new Error(
+      `Date value, ${date}, is not a parsible or convertable date`,
+    );
 
   return result;
+}
+
+function entityDateForge({ fields }) {
+  if (!Array.isArray(fields))
+    throw new Error('Fields must be sent as an array');
+  dlog('entityDateForge with %d fields', fields.length);
+
+  return entity => {
+    const allKeys = Object.keys(entity);
+    const forgedEntity = entity;
+    fields.forEach(field => {
+      if (allKeys.includes(field)) {
+        forgedEntity[field] = dateForge(entity[field]);
+      }
+    });
+    return forgedEntity;
+  };
 }
 
 function sessions(session) {
@@ -92,20 +116,9 @@ function communities(community) {
   return communityOut;
 }
 
-function assets(asset) {
-  dlog('asset');
-  const assetOut = asset;
-  if (asset.createdAt) assetOut.createdAt = dateForge(asset.createdAt);
-  if (asset.lastUpdatedAt)
-    assetOut.lastUpdatedAt = dateForge(asset.lastUpdatedAt);
-  if (asset.startTime) assetOut.startTime = dateForge(asset.startTime);
-  if (asset.stopTime) assetOut.stopTime = dateForge(asset.stopTime);
-
-  return assetOut;
-}
-
 export default {
   dateForge,
+  entityDateForge,
   sessions,
   members,
   events,
