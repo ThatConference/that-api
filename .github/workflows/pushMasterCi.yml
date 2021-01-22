@@ -1,0 +1,65 @@
+# Node Build and Validate and Publish on Tag Push
+name: Push Master CI
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+      - name: Use Node.js 10x
+        uses: actions/setup-node@master
+        with:
+          node-version: 10.x
+      - name: npm ci, run validate
+        run: |
+          npm ci
+          npm run validate
+      - name: Archive Build Artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: that-api
+          path: __build__
+      - name: Slack Notification
+        uses: 8398a7/action-slack@v2
+        with:
+          status: ${{ job.status }}
+          author: Push Request CI
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
+        if: job.status == 'failure' || job.status == 'cancelled'
+  
+  publish:
+    name: Publish
+    runs-on: ubuntu-latest
+      steps:
+        - name: Download Build Artifact
+          uses: actions/download-artifact@master
+          with:
+            name: that-api
+        - name: To npm on version change
+          uses: pascalgn/npm-publish-actions@v1
+          # with:
+          #   tag_name: "v%s"
+          #   tag_message: "v%s"
+          #   commit_pattern: ""
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} 
+            NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+
+        - name: Slack Notification
+          uses: 8398a7/action-slack@v2
+          with:
+            status: ${{ job.status }}
+            author: Push Master CI
+          env:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_DEV_NOTIFICATIONS }}
+          if: job.status == 'failure' || job.status == 'cancelled'

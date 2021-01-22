@@ -1,7 +1,7 @@
 import debug from 'debug';
 import utility from '../../utility';
 
-const dlog = debug('that:api:garage:datasources:firebase:product');
+const dlog = debug('that:api:datasources:firebase:order');
 const { dateForge, entityDateForge } = utility.firestoreDateForge;
 const forgeFields = ['createdAt', 'lastUpdatedAt', 'orderDate'];
 const orderDateForge = entityDateForge({ fields: forgeFields });
@@ -179,6 +179,19 @@ const order = dbInstance => {
     return get(docRef.id);
   }
 
+  function findByStripeEvent(stripeEventId) {
+    dlog(`findByStripeEvent called for ${stripeEventId}`);
+    return orderCollection
+      .where('stripeEventIds', 'array-contains', stripeEventId)
+      .get()
+      .then(docSnapshot => {
+        let result = null;
+        if (docSnapshot.size > 0) result = docSnapshot.doc[0].id;
+
+        return result;
+      });
+  }
+
   return {
     get,
     getBatch,
@@ -187,6 +200,7 @@ const order = dbInstance => {
     getPagedMe,
     create,
     update,
+    findByStripeEvent,
   };
 };
 
