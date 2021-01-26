@@ -7,6 +7,7 @@ const forgeFields = ['createdAt', 'lastUpdatedAt', 'orderDate'];
 const orderDateForge = entityDateForge({ fields: forgeFields });
 
 const collectionName = 'orders';
+const collectionAllocationName = 'orderAllocations';
 
 const scrubOrder = ({ order, isNew, userId }) => {
   dlog('scrubProduct called');
@@ -26,6 +27,7 @@ const order = dbInstance => {
   dlog('instance created');
 
   const orderCollection = dbInstance.collection(collectionName);
+  const allocationCollection = dbInstance.collection(collectionAllocationName);
 
   function get(id) {
     dlog('get called %s', id);
@@ -182,7 +184,7 @@ const order = dbInstance => {
   function findByStripeEvent(stripeEventId) {
     dlog(`findByStripeEvent called for ${stripeEventId}`);
     return orderCollection
-      .where('stripeEventIds', 'array-contains', stripeEventId)
+      .where('stripeEventId', '==', stripeEventId)
       .get()
       .then(docSnapshot => {
         let result = null;
@@ -190,6 +192,24 @@ const order = dbInstance => {
 
         return result;
       });
+  }
+
+  function batchWriteOrderAndAllocations({ newOrder, allocations }) {
+    dlog(`batchWriteOrderAndAllocations`);
+    const orderDocRef = orderCollection.doc(); // creates random id
+    dlog('new order id is %s', orderDocRef.id);
+    const orderAllocations = allocations.map(a => ({
+      ...a,
+      order: orderDocRef.id,
+    }));
+
+    const writeBatch = dbInstance.batch();
+    writeBatch.create(orderDocRef, newOrder);
+    orderAllocations.forEach(oa =>
+      writeBatch.create(allocationCollection.doc(), oa),
+    );
+
+    return writeBatch.commit();
   }
 
   return {
@@ -201,6 +221,7 @@ const order = dbInstance => {
     create,
     update,
     findByStripeEvent,
+    batchWriteOrderAndAllocations,
   };
 };
 
