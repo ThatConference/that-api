@@ -1,29 +1,9 @@
 import debug from 'debug';
-import { Firestore } from '@google-cloud/firestore';
-import { debounce } from 'lodash';
-import utility from '../../utility';
-import firestoreDateForge from '../../utility/firestoreDateForge';
+import * as fbAdmin from 'firebase-admin';
 
 const dlog = debug('that:api:datasources:firebase:history');
-const { dateForge, entityDateForge } = utility.firestoreDateForge;
-const forgeFields = ['createdAt', 'lastUpdatedAt', 'orderDate'];
-const historyDateForge = entityDateForge({ fields: forgeFields });
 
 const stripeEventcollectionName = 'stripeEventHistory';
-
-const scrubHistory = ({ order, isNew, userId }) => {
-  dlog('scrubProduct called');
-  const scrubbedOrder = order;
-  const thedate = new Date();
-  if (isNew) {
-    scrubbedOrder.createdAt = thedate;
-    scrubbedOrder.createdBy = userId;
-  }
-  scrubbedOrder.lastUpdatedAt = thedate;
-  scrubbedOrder.lastUpdatedBy = userId;
-
-  return scrubbedOrder;
-};
 
 const history = dbInstance => {
   dlog('instance created');
@@ -34,15 +14,16 @@ const history = dbInstance => {
 
   // adds new history record, updates counter if already exists
   async function stripeEventSet(stripeEvent) {
-    dlog('stripeEventSet called');
+    dlog('stripeEventSet called, eventId: %s', stripeEvent.id);
 
     const docReference = stripeEventHistoryCollection.doc(stripeEvent.id);
     const newRecord = {
       data: stripeEvent,
       eventType: stripeEvent.type,
-      seenCount: Firestore.FieldValue.increment(1),
+      seenCount: fbAdmin.firestore.FieldValue.increment(1),
       lastSeenAt: new Date(),
     };
+    dlog('writing record %o', newRecord);
 
     return docReference.set(newRecord, { merge: true });
   }

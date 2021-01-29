@@ -203,6 +203,9 @@ const order = dbInstance => {
       order: orderDocRef.id,
     }));
 
+    dlog('newOrder: %o', newOrder);
+    dlog('order allocations: %o', orderAllocations);
+
     const writeBatch = dbInstance.batch();
     writeBatch.create(orderDocRef, newOrder);
     orderAllocations.forEach(oa =>
