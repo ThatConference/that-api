@@ -215,6 +215,31 @@ const order = dbInstance => {
     return writeBatch.commit();
   }
 
+  function transactionWriteOrderAndAllocations({ newOrder, allocations }) {
+    dlog('transactionWriteOrderAndAllocations called');
+    return dbInstance.runTransaction(transaction => {
+      const query = orderCollection.where(
+        'stripeEventId',
+        '==',
+        newOrder.stripeEventId,
+      );
+      return transaction.get(query).then(docSnap => {
+        if (docSnap.size < 1) {
+          const orderDocRef = orderCollection.doc();
+          dlog('new order id is %s', orderDocRef.id);
+          const orderAllocations = allocations.map(a => ({
+            ...a,
+            order: orderDocRef.id,
+          }));
+          transaction.create(orderDocRef, newOrder);
+          orderAllocations.forEach(oa =>
+            transaction.create(allocationCollection.doc(), oa),
+          );
+        }
+      });
+    });
+  }
+
   return {
     get,
     getBatch,
@@ -225,6 +250,7 @@ const order = dbInstance => {
     update,
     findByStripeEvent,
     batchWriteOrderAndAllocations,
+    transactionWriteOrderAndAllocations,
   };
 };
 
