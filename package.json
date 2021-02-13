@@ -14,7 +14,7 @@
     "npm:publish": "npm publish ./__build__ --access public"
   },
   "engines": {
-    "node": "^12"
+    "node": ">=12"
   },
   "dependencies": {
     "apollo-server": "^2.21.0",
