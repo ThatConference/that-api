@@ -5,9 +5,9 @@ import debug from 'debug';
 const dlog = debug('that:api:firestoreDateforge');
 
 function dateForge(date) {
-  let result;
+  let result = '';
 
-  if (typeof date === 'object') {
+  if (date && typeof date === 'object') {
     // either Date or Timestamp
     if (date.toDate) {
       // Firestore Timestamp type
@@ -36,6 +36,7 @@ function entityDateForge({ fields }) {
   dlog('entityDateForge with %d fields', fields.length);
 
   return entity => {
+    if (!entity) return entity;
     const allKeys = Object.keys(entity);
     const forgedEntity = entity;
     fields.forEach(field => {
