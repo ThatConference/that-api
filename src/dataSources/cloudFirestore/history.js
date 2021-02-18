@@ -3,13 +3,17 @@ import * as fbAdmin from 'firebase-admin';
 
 const dlog = debug('that:api:datasources:firebase:history');
 
-const stripeEventcollectionName = 'stripeEventHistory';
+const stripeEventCollectionName = 'stripeEventHistory';
+const thatEventCollectionName = 'thatEventHistory';
 
 const history = dbInstance => {
   dlog('instance created');
 
   const stripeEventHistoryCollection = dbInstance.collection(
-    stripeEventcollectionName,
+    stripeEventCollectionName,
+  );
+  const thatEventHistoryCollection = dbInstance.collection(
+    thatEventCollectionName,
   );
 
   // adds new history record, updates counter if already exists
@@ -28,7 +32,23 @@ const history = dbInstance => {
     return docReference.set(newRecord, { merge: true });
   }
 
-  return { stripeEventSet };
+  // adds new history record, updates counter if already exists
+  async function thatEventSet(thatEvent) {
+    dlog('thatEventSet called, eventId: %s', thatEvent.id);
+
+    const docReference = thatEventHistoryCollection.doc(thatEvent.id);
+    const newRecord = {
+      data: thatEvent,
+      eventType: thatEvent.type,
+      seenCount: fbAdmin.firestore.FieldValue.increment(1),
+      lastSeenAt: new Date(),
+    };
+    dlog('writing record %o', newRecord);
+
+    return docReference.set(newRecord, { merge: true });
+  }
+
+  return { stripeEventSet, thatEventSet };
 };
 
 export default history;
