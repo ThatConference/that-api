@@ -59,6 +59,21 @@ const favorite = dbInstance => {
     };
   }
 
+  // Set's favorite, add if needed, leave alone if already set.
+  function setFavoriteForMember({ favoritedId, favoriteType, user }) {
+    dlog('set favorite %s of %s for %s', favoritedId, favoriteType, user.sub);
+
+    return findFavoriteForMember({
+      favoritedId,
+      favoriteType,
+      user,
+    }).then(fav => {
+      if (fav) return fav;
+
+      return addFavoriteForMember({ favoritedId, favoriteType, user });
+    });
+  }
+
   async function removeFavorite({ favoriteId, user }) {
     dlog('Remove favorite %s', favoriteId);
 
@@ -240,6 +255,7 @@ const favorite = dbInstance => {
   return {
     findFavoriteForMember,
     addFavoriteForMember,
+    setFavoriteForMember,
     removeFavorite,
     getFavoriteCount,
     getFollowersPaged,
