@@ -75,8 +75,15 @@ describe('firestoreDateForge tests', () => {
         createdBy: 'auth0|0',
         lastUpdatedAt: '2020-11-20T15:03:35.219Z',
         lastUpdatedBy: 'auth0|01',
+        startDate: '2021-02-26T01:19:27.579Z',
+        endDate: '2021-02-26T01:19:27.579Z',
       };
       mockEntityCopy = { ...mockEntity };
+    });
+
+    afterEach(() => {
+      mockEntity = null;
+      mockEntityCopy = null;
     });
 
     //jest.mock('dateForge');
@@ -125,6 +132,17 @@ describe('firestoreDateForge tests', () => {
         const result = forge(mockEntity);
         const compare = new Date(mockEntityCopy.createdAt).getTime();
         expect(result.createdAt.getTime()).toBe(compare);
+      });
+    });
+
+    describe('entity specific test', () => {
+      it('will successfully parse events dates', () => {
+        const eventDateForge = firestoreDateForge.events;
+        const result = eventDateForge(mockEntity);
+        expect(result.startDate).toBeInstanceOf(Date);
+        expect(result.endDate).toBeInstanceOf(Date);
+        expect(typeof result.createdAt).toBe('string');
+        expect(result.createdAt).toBe(mockEntityCopy.createdAt);
       });
     });
   });

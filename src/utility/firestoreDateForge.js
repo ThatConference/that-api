@@ -49,72 +49,52 @@ function entityDateForge({ fields }) {
 }
 
 function sessions(session) {
-  dlog('sessions');
-  const sessionOut = session;
-  if (session.createdAt) sessionOut.createdAt = dateForge(session.createdAt);
-  if (session.lastUpdatedAt)
-    sessionOut.lastUpdatedAt = dateForge(session.lastUpdatedAt);
-  if (session.startTime) sessionOut.startTime = dateForge(session.startTime);
+  dlog('firestoreDateForge sessions');
+  const fields = ['createdAt', 'lastUpdatedAt', 'startTime'];
 
-  return sessionOut;
+  return entityDateForge({ fields })(session);
 }
 
 function members(member) {
-  dlog('members');
-  const memberOut = member;
-  if (member.createdAt) memberOut.createdAt = dateForge(member.createdAt);
-  if (member.lastUpdatedAt)
-    memberOut.lastUpdatedAt = dateForge(member.lastUpdatedAt);
+  dlog('firestoreDateForge members');
+  const fields = ['createdAt', 'lastUpdatedAt'];
 
-  return memberOut;
+  return entityDateForge({ fields })(member);
 }
 
 function events(event) {
-  dlog('events');
-  const eventOut = event;
-  if (event.startDate) eventOut.startDate = dateForge(event.startDate);
-  if (event.endDate) eventOut.endDate = dateForge(event.endDate);
+  dlog('firestoreDateForge events');
+  const fields = ['startDate', 'endDate'];
 
-  return eventOut;
+  return entityDateForge({ fields })(event);
 }
 
 function votes(vote) {
-  dlog('votes');
-  const voteOut = vote;
-  if (vote.createdAt) voteOut.createdAt = dateForge(vote.createdAt);
-  if (vote.lastUpdatedAt) voteOut.lastUpdatedAt = dateForge(vote.lastUpdatedAt);
+  dlog('firestoreDateFroge votes');
+  const fields = ['createdAt', 'lastUpdatedAt'];
 
-  return voteOut;
+  return entityDateForge({ fields })(vote);
 }
 
 function earnedMeritBadges(earnedBadge) {
-  dlog('earnedMeritBadges');
-  const earnedBadgeOut = earnedBadge;
-  if (earnedBadge.earnedAt)
-    earnedBadgeOut.earnedAt = dateForge(earnedBadge.earnedAt);
+  dlog('firestoreDateForge earnedMeritBadges');
+  const fields = ['earnedAt'];
 
-  return earnedBadgeOut;
+  return entityDateForge({ fields })(earnedBadge);
 }
 
 function partners(partner) {
-  dlog('partners');
-  const partnerOut = partner;
-  if (partner.createdAt) partnerOut.createdAt = dateForge(partner.createdAt);
-  if (partner.lastUpdatedAt)
-    partnerOut.lastUpdatedAt = dateForge(partner.lastUpdatedAt);
+  dlog('firestoreDateForge partners');
+  const fields = ['createdAt', 'lastUpdatedAt'];
 
-  return partnerOut;
+  return entityDateForge({ fields })(partner);
 }
 
 function communities(community) {
-  dlog('communities');
-  const communityOut = community;
-  if (community.createdAt)
-    communityOut.createdAt = dateForge(community.createdAt);
-  if (community.lastUpdatedAt)
-    communityOut.lastUpdatedAt = dateForge(community.lastUpdatedAt);
+  dlog('friestoreDateForge communities');
+  const fields = ['createdAt', 'lastUpdatedAt'];
 
-  return communityOut;
+  return entityDateForge({ fields })(community);
 }
 
 export default {

@@ -4,6 +4,7 @@ import assets from './cloudFirestore/asset';
 import member from './cloudFirestore/memberExternal';
 import product from './cloudFirestore/product';
 import history from './cloudFirestore/history';
+import event from './cloudFirestore/event';
 
 export default {
   cloudFirestore: {
@@ -13,5 +14,6 @@ export default {
     member,
     product,
     history,
+    event,
   },
 };
