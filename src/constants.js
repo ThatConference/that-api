@@ -8,6 +8,13 @@ const constants = {
         MEMBER: 'member',
       },
     },
+    PRODUCT_TYPE: {
+      TICKET: 'TICKET',
+      MEMBERSHIP: 'MEMBERSHIP',
+      PARTNERSHIP: 'PARTNERSHIP',
+      FOOD: 'FOOD',
+      COUPON: 'COUPON',
+    },
   },
   STRIPE: {
     CHECKOUT_MODE: {
