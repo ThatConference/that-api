@@ -57,14 +57,21 @@ function sessions(session) {
 
 function members(member) {
   dlog('firestoreDateForge members');
-  const fields = ['createdAt', 'lastUpdatedAt'];
+  const fields = ['createdAt', 'lastUpdatedAt', 'membershipExpirationDate'];
 
   return entityDateForge({ fields })(member);
 }
 
 function events(event) {
   dlog('firestoreDateForge events');
-  const fields = ['startDate', 'endDate'];
+  const fields = [
+    'startDate',
+    'endDate',
+    'voteOpenDate',
+    'voteCloseDate',
+    'callForSpeakersOpenDate',
+    'callForSpeakersCloseDate',
+  ];
 
   return entityDateForge({ fields })(event);
 }
@@ -91,10 +98,24 @@ function partners(partner) {
 }
 
 function communities(community) {
-  dlog('friestoreDateForge communities');
+  dlog('firestoreDateForge communities');
   const fields = ['createdAt', 'lastUpdatedAt'];
 
   return entityDateForge({ fields })(community);
+}
+
+function orders(order) {
+  dlog('firestoreDateForge orders');
+  const fields = ['createdAt', 'lastUpdatedAt', 'orderDate'];
+
+  return entityDateForge({ fields })(order);
+}
+
+function products(product) {
+  dlog('firestoreDateForge products');
+  const fields = ['createdAt', 'lastUpdatedAt', 'onSaleFrom', 'onSaleUntil'];
+
+  return entityDateForge({ fields })(product);
 }
 
 export default {
@@ -107,4 +128,6 @@ export default {
   earnedMeritBadges,
   partners,
   communities,
+  orders,
+  products,
 };
