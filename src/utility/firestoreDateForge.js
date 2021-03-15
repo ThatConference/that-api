@@ -1,6 +1,8 @@
 // Date correction for Dates coming out of FireStore.
 // Converts FireStore Timestamp to JavaScript Date type
 import debug from 'debug';
+import getValueAtPath from './getValueAtPath';
+import setValueAtPath from './setValueAtPath';
 
 const dlog = debug('that:api:firestoreDateforge');
 
@@ -42,6 +44,13 @@ function entityDateForge({ fields }) {
     fields.forEach(field => {
       if (allKeys.includes(field)) {
         forgedEntity[field] = dateForge(entity[field]);
+      }
+      if (field.indexOf('.') > 0) {
+        // . at first position not valid
+        const v = getValueAtPath(entity, field);
+        if (v) {
+          setValueAtPath(forgedEntity, field, dateForge(v));
+        }
       }
     });
     return forgedEntity;

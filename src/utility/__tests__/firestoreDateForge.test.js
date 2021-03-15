@@ -63,7 +63,14 @@ describe('firestoreDateForge tests', () => {
 
   describe('entityDateForge tests', () => {
     const { entityDateForge } = firestoreDateForge;
-    const fields = ['createdAt', 'startTime'];
+    const fields = [
+      'createdAt',
+      'startTime',
+      'event.startDate',
+      'event.endDate',
+      'event.not.a.path',
+      'event.nothinghere',
+    ];
     let mockEntity;
     let mockEntityCopy;
     beforeEach(() => {
@@ -77,8 +84,13 @@ describe('firestoreDateForge tests', () => {
         lastUpdatedBy: 'auth0|01',
         startDate: '2021-02-26T01:19:27.579Z',
         endDate: '2021-02-26T01:19:27.579Z',
+        event: {
+          endDate: '2021-03-13T21:40:40.431Z',
+          name: 'THAT Conference',
+          startDate: '2021-03-12T21:40:40.431Z',
+        },
       };
-      mockEntityCopy = { ...mockEntity };
+      mockEntityCopy = JSON.parse(JSON.stringify(mockEntity));
     });
 
     afterEach(() => {
@@ -121,6 +133,7 @@ describe('firestoreDateForge tests', () => {
         expect(result.lastUpdatedBy).toBe(mockEntityCopy.lastUpdatedBy);
         expect(result.type).toBe(mockEntityCopy.type);
         expect(result.description).toBe(mockEntityCopy.description);
+        expect(result.event.name).toBe(mockEntityCopy.event.name);
       });
       it('Forged fields will be an instanceof Date', () => {
         const forge = entityDateForge({ fields });
@@ -143,6 +156,21 @@ describe('firestoreDateForge tests', () => {
         expect(result.endDate).toBeInstanceOf(Date);
         expect(typeof result.createdAt).toBe('string');
         expect(result.createdAt).toBe(mockEntityCopy.createdAt);
+      });
+    });
+
+    describe('entityDateForge deep path tests', () => {
+      it('will succesfully parse dates deep in object', () => {
+        const forge = entityDateForge({ fields });
+        const result = forge(mockEntity);
+        expect(result.event.endDate).toBeInstanceOf(Date);
+        expect(result.event.endDate.getTime()).toBe(
+          new Date(mockEntityCopy.event.endDate).getTime(),
+        );
+        expect(result.event.startDate).toBeInstanceOf(Date);
+        expect(result.event.startDate.getTime()).toBe(
+          new Date(mockEntityCopy.event.startDate).getTime(),
+        );
       });
     });
   });
