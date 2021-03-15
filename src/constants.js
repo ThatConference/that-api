@@ -15,6 +15,10 @@ const constants = {
       FOOD: 'FOOD',
       COUPON: 'COUPON',
     },
+    MESSAGING: {
+      WRITE_QUEUE_RATE: 100,
+      READ_QUEUE_RATE: 100,
+    },
   },
   STRIPE: {
     CHECKOUT_MODE: {
