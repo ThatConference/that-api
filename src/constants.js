@@ -14,6 +14,8 @@ const constants = {
       PARTNERSHIP: 'PARTNERSHIP',
       FOOD: 'FOOD',
       COUPON: 'COUPON',
+      TRAINING: 'TRAINING',
+      FAMILY: 'FAMILY',
     },
     MESSAGING: {
       WRITE_QUEUE_RATE: 100,
