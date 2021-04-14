@@ -14,7 +14,7 @@ const constants = {
       PARTNERSHIP: 'PARTNERSHIP',
       FOOD: 'FOOD',
       COUPON: 'COUPON',
-      WORKSHOP: 'WORKSHOP',
+      TRAINING: 'TRAINING',
       FAMILY: 'FAMILY',
     },
     MESSAGING: {
