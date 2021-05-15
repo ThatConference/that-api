@@ -9,6 +9,8 @@ const dlog = debug('that:api:firestoreDateforge');
 function dateForge(date) {
   let result = '';
 
+  if (date === null) return null;
+
   if (date && typeof date === 'object') {
     // either Date or Timestamp
     if (date.toDate) {
