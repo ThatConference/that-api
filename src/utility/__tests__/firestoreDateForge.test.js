@@ -6,18 +6,35 @@ describe('firestoreDateForge tests', () => {
       it('throws on a non-date-parsable string', () => {
         expect(() => {
           const result = firestoreDateForge.dateForge('not a date');
-        }).toThrow();
+        }).toThrow(
+          'Date value, not a date, is not a parsible or convertable date',
+        );
       });
       it('throws on an unknown object', () => {
         expect(() => {
           const result = firestoreDateForge.dateForge({});
-        }).toThrow();
+        }).toThrow(
+          'Date value, [object Object], is not a parsible or convertable date',
+        );
       });
       it('throws on a valid formated invalid date value', () => {
         const testdate = '2020-12-04T24:54:07.747Z';
         expect(() => {
           const result = firestoreDateForge.dateForge(testdate);
-        }).toThrow();
+        }).toThrow(
+          'Date value, 2020-12-04T24:54:07.747Z, is not a parsible or convertable date',
+        );
+      });
+      it('throws on empty string', () => {
+        expect(() => {
+          const result = firestoreDateForge.dateForge('');
+        }).toThrow('Date value, , is not a parsible or convertable date');
+      });
+    });
+
+    describe('dateforge receives null', () => {
+      it('null value returned as null', () => {
+        expect(firestoreDateForge.dateForge(null)).toBe(null);
       });
     });
 

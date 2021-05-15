@@ -17,7 +17,7 @@ const isDate = value => {
 };
 
 const validateDateFormat = value => {
-  const results = moment(value).isValid();
+  const results = moment(value, true).isValid();
   if (results) return true;
 
   throw new TypeError();
@@ -52,7 +52,7 @@ export default {
       dlog('serialize %o', value);
 
       let result;
-      if (value.toDate) {
+      if (value && value.toDate) {
         result = value.toDate();
       } else if (isDate(value)) {
         result = value;
