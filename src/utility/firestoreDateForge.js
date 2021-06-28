@@ -122,6 +122,13 @@ function orders(order) {
   return entityDateForge({ fields })(order);
 }
 
+function orderAllocations(allocation) {
+  dlog('firestoreDateForge orderAllocations');
+  const fields = ['createdAt', 'lastUpdatedAt', 'checkedInAt'];
+
+  return entityDateForge({ fields })(allocation);
+}
+
 function products(product) {
   dlog('firestoreDateForge products');
   const fields = ['createdAt', 'lastUpdatedAt', 'onSaleFrom', 'onSaleUntil'];
@@ -140,5 +147,6 @@ export default {
   partners,
   communities,
   orders,
+  orderAllocations,
   products,
 };
