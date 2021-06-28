@@ -191,4 +191,26 @@ describe('firestoreDateForge tests', () => {
       });
     });
   });
+
+  describe('validate forged entities exist', () => {
+    const entities = [
+      'sessions',
+      'members',
+      'events',
+      'votes',
+      'earnedMeritBadges',
+      'partners',
+      'communities',
+      'orders',
+      'orderAllocations',
+      'products',
+    ];
+
+    describe('will have a function for each entity', () => {
+      entities.forEach(entity => {
+        it(`has ${entity}`, () =>
+          expect(firestoreDateForge[entity]).toBeDefined());
+      });
+    });
+  });
 });
