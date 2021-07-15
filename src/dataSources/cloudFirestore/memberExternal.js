@@ -33,6 +33,14 @@ const member = dbInstance => {
       });
   }
 
+  function batchFind(memberIds) {
+    if (!Array.isArray(memberIds))
+      throw new Error('getBatch parmeter, memberIds, must be in an array');
+    dlog('get many members (batch),  %d', memberIds.length);
+    const getFuncs = memberIds.map(m => get(m));
+    return Promise.all(getFuncs);
+  }
+
   async function update({ memberId, profile }) {
     dlog('update %s', memberId);
     const docRef = memberCollection.doc(memberId);
@@ -43,7 +51,7 @@ const member = dbInstance => {
     return get(memberId);
   }
 
-  return { get, update };
+  return { get, batchFind, update };
 };
 
 export default member;
