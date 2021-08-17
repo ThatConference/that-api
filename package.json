@@ -1,9 +1,10 @@
 {
   "name": "@thatconference/api",
   "description": "THAT-API shared library for all micro services",
-  "version": "2.0.0",
+  "version": "2.0.3",
   "main": "index.js",
   "scripts": {
+    "postinstall": "husky install",
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
     "postbuild": "cp ./package.json ./package-lock.json ./__build__",
     "dev": "nodemon -e js --watch src --ignore '*.test.js, *.tests.js' --exec npm run build",
@@ -11,8 +12,7 @@
     "lint": "eslint 'src/**/*.js'",
     "validate": "concurrently npm:test npm:lint npm:build ",
     "prenpm:publish": "npm run build",
-    "npm:publish": "npm publish ./__build__ --access public",
-    "prepare": "husky install"
+    "npm:publish": "npm publish ./__build__ --access public"
   },
   "engines": {
     "node": "14.x"
