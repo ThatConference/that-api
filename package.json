@@ -1,7 +1,7 @@
 {
   "name": "@thatconference/api",
-  "description": "THAT-API shared library for all microservices",
-  "version": "1.24.1",
+  "description": "THAT-API shared library for all micro services",
+  "version": "2.0.0",
   "main": "index.js",
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
@@ -11,10 +11,11 @@
     "lint": "eslint 'src/**/*.js'",
     "validate": "concurrently npm:test npm:lint npm:build ",
     "prenpm:publish": "npm run build",
-    "npm:publish": "npm publish ./__build__ --access public"
+    "npm:publish": "npm publish ./__build__ --access public",
+    "prepare": "husky install"
   },
   "engines": {
-    "node": ">=12"
+    "node": "14.x"
   },
   "dependencies": {
     "apollo-server": "2.22.2",
@@ -30,27 +31,27 @@
     "request-ip": "^2.1.3"
   },
   "devDependencies": {
-    "@babel/cli": "^7.13.16",
-    "@babel/core": "^7.14.2",
-    "@babel/node": "^7.14.2",
-    "@babel/preset-env": "^7.14.2",
-    "@babel/register": "^7.13.16",
+    "@babel/cli": "^7.14.8",
+    "@babel/core": "^7.15.0",
+    "@babel/node": "^7.14.9",
+    "@babel/preset-env": "^7.15.0",
+    "@babel/register": "^7.15.3",
     "babel-core": "^6.26.3",
-    "babel-jest": "^26.6.3",
-    "concurrently": "^6.1.0",
-    "dotenv": "^9.0.2",
-    "eslint": "^7.26.0",
+    "babel-jest": "^27.0.6",
+    "concurrently": "^6.2.1",
+    "dotenv": "^10.0.0",
+    "eslint": "^7.32.0",
     "eslint-config-airbnb": "^18.2.1",
     "eslint-config-airbnb-base": "^14.2.1",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-babel": "^5.3.1",
-    "eslint-plugin-import": "^2.23.1",
-    "eslint-plugin-jest": "^24.3.6",
+    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-jest": "^24.4.0",
     "eslint-plugin-prettier": "^3.4.0",
-    "husky": "^4.3.8",
-    "jest-cli": "^26.6.3",
-    "nodemon": "^2.0.7",
-    "prettier-eslint": "^12.0.0",
+    "husky": "^7.0.1",
+    "jest-cli": "^27.0.6",
+    "nodemon": "^2.0.12",
+    "prettier-eslint": "^13.0.0",
     "prettier-eslint-cli": "^5.0.1"
   },
   "license": "gpl-3.0",
@@ -69,11 +70,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/thatconference/that-api.git",
-    "husky": {
-      "hooks": {
-        "pre-push": "npm run validate"
-      }
-    }
+    "url": "https://github.com/thatconference/that-api.git"
   }
 }
