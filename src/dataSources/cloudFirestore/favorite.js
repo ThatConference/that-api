@@ -216,9 +216,8 @@ const favorite = dbInstance => {
     if (cursor) {
       const curObject = Buffer.from(cursor, 'base64').toString('utf8');
       dlog('cursor sent %s', curObject);
-      const { curCreatedAt, curFavoriteType, curMemberId } = JSON.parse(
-        curObject,
-      );
+      const { curCreatedAt, curFavoriteType, curMemberId } =
+        JSON.parse(curObject);
       if (
         !curCreatedAt ||
         curFavoriteType !== favoriteType ||
