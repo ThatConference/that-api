@@ -3,9 +3,7 @@ import debug from 'debug';
 import utility from '../../utility';
 
 const dlog = debug('that:api:datasources:firebase:member');
-const { entityDateForge } = utility.firestoreDateForge;
-const forgeFields = ['createdAt', 'lastUpdatedAt'];
-const memberDateForge = entityDateForge({ fields: forgeFields });
+const { members: memberDateForge } = utility.firestoreDateForge;
 
 const collectionName = 'members';
 
@@ -41,17 +39,33 @@ const member = dbInstance => {
     return Promise.all(getFuncs);
   }
 
-  async function update({ memberId, profile }) {
+  async function update({ memberId, profile, updatedBy }) {
     dlog('update %s', memberId);
     const docRef = memberCollection.doc(memberId);
     const moddedProfile = profile;
     moddedProfile.lastUpdatedAt = new Date();
+    if (updatedBy) moddedProfile.lastUpdatedBy = updatedBy;
     await docRef.update(moddedProfile);
 
     return get(memberId);
   }
 
-  return { get, batchFind, update };
+  function findMemberByStripeCustId(stripeCustId) {
+    return memberCollection
+      .where('stipeCustomerId', '==', stripeCustId)
+      .get()
+      .then(docSnap => {
+        docSnap.docs.map(m => {
+          const r = {
+            id: m.id,
+            ...m.data(),
+          };
+          return memberDateForge(r);
+        });
+      });
+  }
+
+  return { get, batchFind, update, findMemberByStripeCustId };
 };
 
 export default member;
