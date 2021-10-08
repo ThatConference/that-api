@@ -52,17 +52,17 @@ const member = dbInstance => {
 
   function findMemberByStripeCustId(stripeCustId) {
     return memberCollection
-      .where('stipeCustomerId', '==', stripeCustId)
+      .where('stripeCustomerId', '==', stripeCustId)
       .get()
-      .then(docSnap => {
-        docSnap.docs.map(m => {
+      .then(querySnap =>
+        querySnap.docs.map(m => {
           const r = {
             id: m.id,
             ...m.data(),
           };
           return memberDateForge(r);
-        });
-      });
+        }),
+      );
   }
 
   return { get, batchFind, update, findMemberByStripeCustId };
