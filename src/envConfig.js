@@ -2,6 +2,7 @@ import debug from 'debug';
 
 const dlog = debug('that:api:config');
 
+// eslint-disable-next-line no-unused-vars
 function missingConfig(configKey) {
   throw new Error(`missing required .env setting for ${configKey}`);
 }
@@ -9,11 +10,14 @@ function missingConfig(configKey) {
 function getConfig() {
   const config = {
     influx: {
-      token: process.env.INFLUX_TOKEN || missingConfig('INFLUX_TOKEN'),
-      orgId: process.env.INFLUX_ORG_ID || missingConfig('INFLUX_ORG_ID'),
-      bucketId:
-        process.env.INFLUX_BUCKET_ID || missingConfig('INFLUX_BUCKET_ID'),
-      host: process.env.INFLUX_HOST || missingConfig('INFLUX_HOST'),
+      token: process.env.INFLUX_TOKEN || null,
+      orgId: process.env.INFLUX_ORG_ID || null,
+      bucketId: process.env.INFLUX_BUCKET_ID || null,
+      host: process.env.INFLUX_HOST || null,
+    },
+    socialsBuffer: {
+      accessToken: process.env.BUFFER_ACCESS_TOKEN || null,
+      baseUrl: process.env.BUFFER_BASE_URL || 'https://api.bufferapp.com/1',
     },
   };
 

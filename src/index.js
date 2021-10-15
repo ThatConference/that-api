@@ -6,6 +6,7 @@ import utilityImpl from './utility';
 import datasourceImpl from './dataSources';
 import mentionsImpl from './mentions';
 import constantsImpl from './constants';
+import libImpl from './lib';
 
 export const security = securityImpl;
 export const graph = graphImpl;
@@ -15,3 +16,4 @@ export const utility = utilityImpl;
 export const dataSources = datasourceImpl;
 export const mentions = mentionsImpl;
 export const constants = constantsImpl;
+export const lib = libImpl;
