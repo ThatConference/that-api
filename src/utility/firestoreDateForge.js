@@ -68,7 +68,12 @@ function sessions(session) {
 
 function members(member) {
   dlog('firestoreDateForge members');
-  const fields = ['createdAt', 'lastUpdatedAt', 'membershipExpirationDate'];
+  const fields = [
+    'createdAt',
+    'lastUpdatedAt',
+    'membershipExpirationDate',
+    'requestSlackInviteAt',
+  ];
 
   return entityDateForge({ fields })(member);
 }
