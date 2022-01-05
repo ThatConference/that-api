@@ -3,6 +3,7 @@
 /* eslint-disable no-underscore-dangle */
 
 import { SchemaDirectiveVisitor, ForbiddenError } from 'apollo-server';
+import { defaultFieldResolver } from 'graphql';
 import debug from 'debug';
 
 const dlog = debug('that:api:directive:auth');
@@ -31,7 +32,6 @@ class AuthDirective extends SchemaDirectiveVisitor {
       dlog('for each field', fieldName);
 
       const field = fields[fieldName];
-      // eslint-disable-next-line no-undef
       const { resolve = defaultFieldResolver } = field;
 
       field.resolve = async (...args) => {
