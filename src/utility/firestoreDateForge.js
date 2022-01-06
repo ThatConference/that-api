@@ -89,6 +89,8 @@ function events(event) {
     'callForSpeakersCloseDate',
     'callForOnSpeakersOpenDate',
     'callForOnSpeakersCloseDate',
+    'ticketsOnSaleFrom',
+    'ticketsOnSaleUntil',
   ];
 
   return entityDateForge({ fields })(event);
