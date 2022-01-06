@@ -65,7 +65,25 @@ const member = dbInstance => {
       );
   }
 
-  return { get, batchFind, update, findMemberByStripeCustId };
+  function getIdType(memberId) {
+    return get(memberId).then(m => {
+      let typename = 'PrivateProfile';
+      if (m.canFeature) typename = 'PublicProfile';
+      return {
+        id: m.id,
+        __typename: typename,
+      };
+    });
+  }
+
+  function getSecureBatch(ids) {
+    dlog('getBatch called %d ids', ids.length);
+    if (!Array.isArray(ids))
+      throw new Error('getBatch must receive an array of ids');
+    return Promise.all(ids.map(id => getIdType(id)));
+  }
+
+  return { get, batchFind, update, findMemberByStripeCustId, getSecureBatch };
 };
 
 export default member;
