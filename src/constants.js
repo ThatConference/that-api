@@ -36,6 +36,18 @@ const constants = {
       INCOMPLETE_EXPIRED: 'incomplete_expired',
     },
   },
+  GRAPHCDN: {
+    EVENT_NAME: {
+      PURGE: 'purgeEntity',
+      CREATED_SESSION: 'createdSession',
+      CREATED_PRODUCT: 'createdProduct',
+    },
+    PURGE: {
+      MEMBER: 'purgeMembers',
+      SESSION: 'purgeSessions',
+      PRODUCT: 'purgeProducts',
+    },
+  },
 };
 
 export default constants;
