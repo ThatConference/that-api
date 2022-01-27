@@ -4,7 +4,7 @@ const dlog = debug('that:api:config');
 
 // eslint-disable-next-line no-unused-vars
 function missingConfig(configKey) {
-  throw new Error(`missing required .env setting for ${configKey}`);
+  throw new Error(`missing required .env setting in that-api for ${configKey}`);
 }
 
 function getConfig() {
@@ -21,9 +21,17 @@ function getConfig() {
     },
   };
 
-  dlog('created config %O', config);
+  dlog('created that-api env config %O', config);
 
   return config;
 }
 
+function getGraphCdn() {
+  return {
+    token: process.env.GRAPHCDN_TOKEN || missingConfig('GRAPHCDN_TOKEN'),
+    api: process.env.GRAPHCDN_API || 'https://admin.graphcdn.io/that',
+  };
+}
+
 export default getConfig();
+export { getGraphCdn };

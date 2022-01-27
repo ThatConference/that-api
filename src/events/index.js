@@ -1,5 +1,5 @@
-import influx from './influx';
+import graphCdn from './graphCdn';
 
 export default {
-  influx,
+  graphCdn,
 };
