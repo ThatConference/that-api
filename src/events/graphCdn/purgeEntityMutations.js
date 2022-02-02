@@ -17,6 +17,7 @@ export default {
       purgeKeynote(id: $id)
       purgePanel(id: $id)
       purgeWorkshop(id: $id)
+      purgeAcceptedSession(id: $id)
     }
   `,
   purgeProducts: `
