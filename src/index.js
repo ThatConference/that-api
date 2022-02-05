@@ -8,6 +8,7 @@ import mentionsImpl from './mentions';
 import constantsImpl from './constants';
 import libImpl from './lib';
 import validateImpl from './validate';
+import orbitLoveImpl from './orbitLove';
 
 export const security = securityImpl;
 export const graph = graphImpl;
@@ -19,3 +20,4 @@ export const mentions = mentionsImpl;
 export const constants = constantsImpl;
 export const lib = libImpl;
 export const validate = validateImpl;
+export const orbitLove = orbitLoveImpl;

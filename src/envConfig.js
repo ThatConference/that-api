@@ -33,5 +33,13 @@ function getGraphCdn() {
   };
 }
 
+function getOrbitLove() {
+  return {
+    workspaceSlug: process.env.ORBIT_WS_SLUG || 'that-6460d1',
+    token: process.env.ORBIT_TOKEN || missingConfig('ORBIT_TOKEN'),
+    baseUrl: process.env.ORBIT_BASE_URL || 'https://app.orbit.love/api/v1',
+  };
+}
+
 export default getConfig();
-export { getGraphCdn };
+export { getGraphCdn, getOrbitLove };
