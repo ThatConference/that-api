@@ -73,23 +73,23 @@ export default {
   },
   // register or purchase?
   purchase: {
-    onthat: () => ({
+    onThat: () => ({
       typeKey: 'that:purchase:onticket',
-      action: 'onthat',
-      actionText: 'purchased ON THAT',
-      title: 'Purchased ON THAT',
+      action: 'onThat',
+      actionText: 'purchased ON THAT ticket',
+      title: '~name~ purchased ON THAT ticket for ~event~',
     }),
-    atthat: () => ({
+    atThat: () => ({
       typeKey: 'that:purchase:atticket',
-      action: 'atthat',
-      actionText: 'purchased AT THAT',
-      title: 'Created THAT Profile',
+      action: 'atThat',
+      actionText: 'purchased AT THAT ticket',
+      title: '~name~ purchased AT THAT ticket for ~event~',
     }),
     membership: () => ({
       typeKey: 'that:purchase:membership',
       action: 'membership',
       actionText: 'purchased membership',
-      title: ``,
+      title: `~name~ purchased membership on ~date~`,
     }),
   },
   favorite: {

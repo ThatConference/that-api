@@ -67,10 +67,10 @@ export default function orbitLoveApi({ firestore }) {
       const { firstName, lastName, profileSlug, email } = thatMember;
       const title = activityType.title
         .replace('~name~', `${firstName} ${lastName}`)
-        .replace('~title~', session.title || 'N/A')
-        .replace('~event~', event.slug);
-      let description = `${activityType.actionText} session "${session.title}" of type ${session.type}`;
-      if (event?.slug) description += ` for ${event.slug}.`;
+        .replace('~title~', session?.title || 'N/A')
+        .replace('~event~', event?.slug);
+      let description = `${activityType.actionText} session "${session?.title}" of type ${session?.type}`;
+      if (event?.slug) description += ` for ${event?.slug}.`;
       const payload = {
         identity: {
           source: 'email',
@@ -80,7 +80,7 @@ export default function orbitLoveApi({ firestore }) {
           title,
           description,
           activity_type_key: activityType.typeKey,
-          link: `${thatusbase}/activities/${session.id}`,
+          link: `${thatusbase}/activities/${session?.id}`,
           link_text: 'activity',
           properties: {
             sessionType: session.type,
@@ -94,6 +94,7 @@ export default function orbitLoveApi({ firestore }) {
 
       return sendOrbitPostRequest({ payload });
     },
+
     addProfileActivity({ activityType, member }) {
       dlog('addProfileActivty called for %s', member.id);
 
@@ -126,12 +127,43 @@ export default function orbitLoveApi({ firestore }) {
 
       return sendOrbitPostRequest({ payload });
     },
-    async addPurchaseActivity({ activityType, member, order }) {
+
+    addPurchaseActivity({ activityType, member, order, event }) {
       // Purchases handled in Brinks.
       // This will be called from an event handler there.
       dlog('addPurchaseActivity called for %s', member.id);
-      throw new Error('addPurchaseActivity not implemented');
+
+      const { email, firstName, lastName, profileSlug } = member;
+      const title = activityType.title
+        .replace('~name~', `${firstName} ${lastName}`)
+        .replace('~date', new Date(order?.orderDate))
+        .replace('~event~', event?.name);
+      const description = `${title}\n${order?.lineItems?.map(
+        li => li.uiReference,
+      )}`;
+      const payload = {
+        identity: {
+          source: 'email',
+          email,
+        },
+        activity: {
+          title,
+          description,
+          activity_type_key: activityType.typeKey,
+          link: `${thatusbase}/members/${profileSlug}`,
+          link_text: 'profile',
+        },
+        member: {
+          name: `${firstName} ${lastName}`,
+        },
+      };
+      if (activityType.action === 'membership') {
+        payload.member.tags_to_add = 'membership';
+      }
+
+      return sendOrbitPostRequest({ payload });
     },
+
     async addSpeakerActivity({ activityType, member, order }) {
       // We identify speakers at two points
       // 1. When they accept to speak and receive ticket (order.type>speaker)
@@ -139,10 +171,10 @@ export default function orbitLoveApi({ firestore }) {
       dlog('addSpeakerActivity called for %s', member.id);
 
       const { email, firstName, lastName, profileSlug } = member;
-      const thatEvent = await getThatEventData(order.event);
+      const thatEvent = await getThatEventData(order?.event);
       const title = activityType.title
         .replace('~name~', `${firstName} ${lastName}`)
-        .replace('~event~', thatEvent.slug);
+        .replace('~event~', thatEvent?.slug);
 
       const payload = {
         identity: {
@@ -161,8 +193,8 @@ export default function orbitLoveApi({ firestore }) {
           tags_to_add: 'speaker',
         },
         properties: {
-          eventSlug: thatEvent.slug,
-          event: thatEvent.name,
+          eventSlug: thatEvent?.slug,
+          event: thatEvent?.name,
           firstName,
           lastName,
           profileSlug,
@@ -171,10 +203,12 @@ export default function orbitLoveApi({ firestore }) {
 
       return sendOrbitPostRequest({ payload });
     },
+
     addFavoriteActivity({ activityType, user, favorite }) {
       dlog('addFavoriteActivity called');
       throw new Error('addFavoriteActivity not implemented');
     },
+
     addSignUpActivity({ activityType, email }) {
       // Sign-up activity isn't really done through our api so the
       // thought here is that we will use a webhook (e.g. that-api-webhooks)
@@ -200,10 +234,12 @@ export default function orbitLoveApi({ firestore }) {
 
       return sendOrbitPostRequest({ payload });
     },
+
     addLeadGenActivity({ activityType, user }) {
       dlog('addLeadGenActivity called');
       throw new Error('addLeadGenActivity is not implemented');
     },
+
     addNewsActivity({ activityType, user }) {
       dlog('addNewsActivity called');
       throw new Error('addNewsActicity is not implemented');
