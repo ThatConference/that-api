@@ -31,6 +31,13 @@ export default {
       purgeFamily(id: $id)
     }
   `,
+  purgeOrderAllocation: `
+    mutation purgeOrderAllocation($id: [ID!]) {
+      purgeOrderAllocation(id: $id)
+      purgePublicOrderAllocation(id: $id)
+      purgeRegistrationOrderAllocation(id: $id)
+    }
+  `,
   onCreatedSession: `
     mutation purgeOnCreatedSession($eventId: [ID!], $memberIds: [ID!]) {
       purgeProfile(id: $memberIds)

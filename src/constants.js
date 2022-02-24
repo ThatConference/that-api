@@ -46,6 +46,7 @@ const constants = {
       MEMBER: 'purgeMembers',
       SESSION: 'purgeSessions',
       PRODUCT: 'purgeProducts',
+      ORDER_ALLOCATION: 'purgeOrderAllocation',
     },
   },
 };
