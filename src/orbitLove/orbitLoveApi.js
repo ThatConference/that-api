@@ -46,7 +46,7 @@ export default function orbitLoveApi({ firestore }) {
             status: 422,
             err: res.json(),
           };
-        throw new Error('Request Error:', res.statusText);
+        throw new Error(`Request Error: ${res.statusText}`);
       })
       .then(json => {
         if (json.err)
