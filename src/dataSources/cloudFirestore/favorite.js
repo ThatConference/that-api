@@ -80,11 +80,10 @@ const favorite = dbInstance => {
     // Add check to verify it's this user's favorite?
     const fav = await favoriteCollection.doc(favoriteId).get();
     if (!fav.exists)
-      throw new Error('Provided favoriteId does not exist %s', favoriteId);
+      throw new Error(`Provided favoriteId does not exist ${favoriteId}`);
     if (user.sub !== fav.get('memberId'))
       throw new Error(
-        'Unable to remove favorite not owned by current member %s',
-        favoriteId,
+        `Unable to remove favorite not owned by current member ${favoriteId}`,
       );
 
     return favoriteCollection.doc(favoriteId).delete();
