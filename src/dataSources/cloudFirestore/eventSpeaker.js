@@ -60,9 +60,11 @@ const eventSpeaker = dbInstance => {
       memberId,
       isAccepting,
     );
+    let status = 'IN_PROGRESS';
+    if (isAccepting === false) status = 'COMPLETE';
     const newValues = {
       agreeToSpeak: isAccepting,
-      status: 'IN_PROGRESS',
+      status,
       rsvpAt: new Date(),
       reason: reason || null,
     };
