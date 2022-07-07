@@ -87,7 +87,12 @@ describe(`Request Signature tests`, () => {
       t = null;
       sig = null;
     });
-    it('respons as ok', () => {
+    it('responds not okay with message on no payload', () => {
+      const r = reqSig.signRequest();
+      expect(r.isOk).toBe(false);
+      expect((r.message = 'no payload provided'));
+    });
+    it('responds as ok on successful signing', () => {
       const { isOk } = signValue;
       expect(isOk).toBe(true);
     });
