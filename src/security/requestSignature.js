@@ -28,18 +28,22 @@ function requestSignature({ signingKey, ttl = 30000 }) {
 
   function signRequest(payload) {
     dlog('sign payload: %o', payload);
-    const validTo = new Date().getTime() + ttl;
-    const data = `${validTo}.${JSON.stringify(payload)}`;
-    const hash = crypto
-      .createHmac('sha256', signingKey)
-      .update(data, 'utf-8')
-      .digest('hex');
 
     const output = {
       isOk: false,
       thatSig: null,
       message: '',
     };
+    if (!payload) {
+      output.message = 'no payload provided';
+      return output;
+    }
+    const validTo = new Date().getTime() + ttl;
+    const data = `${validTo}.${JSON.stringify(payload)}`;
+    const hash = crypto
+      .createHmac('sha256', signingKey)
+      .update(data, 'utf-8')
+      .digest('hex');
 
     if (hash?.length < 64) {
       output.message = 'failed to create signature (result too small)';
@@ -57,8 +61,14 @@ function requestSignature({ signingKey, ttl = 30000 }) {
 
   function verifyRequest({ thatSig, payload }) {
     dlog('verify signature: %o', thatSig);
-    if (!thatSig) throw new Error('thatSig is a required parameter');
-    if (!payload) throw new Error('payload is a required parameter');
+    if (!thatSig)
+      throw new Error(
+        'thatSig is a required parameter, `{ thatSig, payload }`',
+      );
+    if (!payload)
+      throw new Error(
+        'payload is a required parameter, `{ thatSig, payload }`',
+      );
     const now = new Date().getTime();
     const output = {
       isValid: false,
