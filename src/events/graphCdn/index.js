@@ -1,7 +1,7 @@
 import 'dotenv/config';
 import { EventEmitter } from 'events';
 import debug from 'debug';
-import fetch from 'node-fetch';
+import fetch from '@adobe/node-fetch-retry';
 
 import { getGraphCdn } from '../../envConfig';
 import { GraphCdnError } from '../../lib/errors';
@@ -22,8 +22,15 @@ export default function graphCdnEvents(Sentry) {
   }
 
   function sendReqToGraphCdn(payload) {
+    Sentry.addBreadcrumb({
+      category: 'graphCdn',
+      message: 'post purge request',
+      level: 'info',
+      data: payload,
+    });
     const headers = {
       'Content-Type': 'application/json',
+      Accept: 'application/json',
       'graphcdn-token': graphCdn.token,
     };
 
@@ -31,9 +38,12 @@ export default function graphCdnEvents(Sentry) {
       method: 'POST',
       body: JSON.stringify(payload),
       headers,
+      retryInitialDelay: 250,
+      retryBackoff: 2.0,
     })
       .then(res => {
         if (res.ok) return res.json();
+        Sentry.setContext('response error', JSON.stringify(res));
         throw new GraphCdnError(`Non-200 request result: ${res.statusText}`);
       })
       .then(json => {
