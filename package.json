@@ -1,7 +1,7 @@
 {
   "name": "@thatconference/api",
   "description": "THAT-API shared library for all micro services",
-  "version": "2.9.2",
+  "version": "2.10.0",
   "main": "index.js",
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
@@ -17,6 +17,7 @@
     "node": "14.x"
   },
   "dependencies": {
+    "@adobe/node-fetch-retry": "^2.2.0",
     "apollo-server": "2.22.2",
     "auth0": "^2.40.0",
     "debug": "^4.3.4",
