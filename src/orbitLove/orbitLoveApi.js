@@ -1,7 +1,7 @@
 // our  Orbit.love api sdk
 import 'dotenv/config';
 import debug from 'debug';
-import fetch from 'node-fetch';
+import fetch from '@adobe/node-fetch-retry';
 import { getOrbitLove } from '../envConfig';
 import dataSources from '../dataSources';
 import activityTypesSrc from './activityTypes';
@@ -29,7 +29,8 @@ export default function orbitLoveApi({ firestore }) {
     dlog('Orbit post request');
     const headers = {
       Authorization: `Bearer ${orbitToken}`,
-      'Content-type': 'application/json',
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
     };
     const url = `${baseUrl}/${workspaceSlug}/${uriAction}`;
 
@@ -37,6 +38,8 @@ export default function orbitLoveApi({ firestore }) {
       method: 'post',
       body: JSON.stringify(payload),
       headers,
+      retryInitialDelay: 250,
+      retryBackoff: 4.0,
     })
       .then(res => {
         if (res.ok) return res.json();

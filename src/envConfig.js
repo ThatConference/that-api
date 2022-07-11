@@ -21,7 +21,7 @@ function getConfig() {
     },
   };
 
-  dlog('created that-api env config %O', config);
+  dlog('created that-api env config');
 
   return config;
 }
