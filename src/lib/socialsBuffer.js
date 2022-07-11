@@ -1,6 +1,6 @@
 // Buffer.com socials queuing library
 import debug from 'debug';
-import fetch from 'node-fetch';
+import fetch from '@adobe/node-fetch-retry';
 import envConfig from '../envConfig';
 
 const dlog = debug('that:api:socialsBuffer');
@@ -18,6 +18,10 @@ const socialsBuffer = () => {
   const headers = {
     'User-Agent': 'that-api socialsBuffer',
     Authorization: `Bearer ${bufferToken}`,
+  };
+  const fetchOptions = {
+    retryInitialDelay: 250,
+    retryBackoff: 4.0,
   };
 
   async function createPost({
@@ -43,9 +47,10 @@ const socialsBuffer = () => {
     formParams.append('media[link]', link);
     formParams.append('scheduled_at', new Date(scheduleAt).toISOString());
     const options = {
-      headers: { ...headers },
+      headers,
       method: 'POST',
       body: formParams,
+      ...fetchOptions,
     };
 
     const res = await fetch(`${baseUrl}/updates/create.json`, options);
@@ -70,8 +75,9 @@ const socialsBuffer = () => {
         'socialBufferId is a required parameter. use socialsBuffer value',
       );
     const options = {
-      headers: { ...headers },
+      headers,
       method: 'GET',
+      ...fetchOptions,
     };
 
     const res = await fetch(
