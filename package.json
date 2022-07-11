@@ -18,7 +18,7 @@
   },
   "dependencies": {
     "@adobe/node-fetch-retry": "^2.2.0",
-    "apollo-server": "2.22.2",
+    "apollo-server": "2.25.3",
     "auth0": "^2.40.0",
     "debug": "^4.3.4",
     "firebase-admin": "^11.0.0",
