@@ -1,8 +1,10 @@
 # that-api
 
-Shared component library for the api microservices.
+> ⚠️ **Warning**: This is the **v2** branch of `that-api for use with THAT-api's still on version 2 of Apollo server.
 
-@thatconference/api
+Shared component library for the THAT-api's micro-services.
+
+Available as an npm package: `@thatconference/api`
 
 ## Development guidelines
 
