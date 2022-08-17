@@ -1,77 +1,78 @@
-/* eslint-disable class-methods-use-this */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-underscore-dangle */
-
-import { SchemaDirectiveVisitor, ForbiddenError } from 'apollo-server';
-import { defaultFieldResolver } from 'graphql';
+import { mapSchema, getDirective, MapperKind } from '@graphql-tools/utils';
+import { ForbiddenError } from 'apollo-server';
 import debug from 'debug';
+
+const { defaultFieldResolver } = require('graphql');
 
 const dlog = debug('that:api:directive:auth');
 
-class AuthDirective extends SchemaDirectiveVisitor {
-  visitObject(type) {
-    dlog('visit Object');
-    this.ensureFieldsWrapped(type);
-    type._requiredAuthRole = this.args.requires;
-  }
+function authDirectiveMapper(directiveName) {
+  dlog('authDirectiveMapper called:', directiveName);
 
-  visitFieldDefinition(field, details) {
-    dlog('visit Field Definition');
-    this.ensureFieldsWrapped(details.objectType);
-    field._requiredAuthRole = this.args.requires;
-  }
+  const typeDirectiveArgumentMaps = {};
 
-  ensureFieldsWrapped(objectType) {
-    dlog('ensured Fields Wrapped');
+  return {
+    authDirectiveTransformer: schema =>
+      mapSchema(schema, {
+        [MapperKind.TYPE]: type => {
+          dlog('type resolved', type);
 
-    if (objectType._authFieldsWrapped) return;
-    objectType._authFieldsWrapped = true;
-    const fields = objectType.getFields();
+          const authDirective = getDirective(schema, type, directiveName)?.[0];
 
-    Object.keys(fields).forEach(fieldName => {
-      dlog('for each field', fieldName);
+          if (authDirective) {
+            typeDirectiveArgumentMaps[type.name] = authDirective;
+          }
 
-      const field = fields[fieldName];
-      const { resolve = defaultFieldResolver } = field;
+          return undefined;
+        },
+        // eslint-disable-next-line consistent-return
+        [MapperKind.OBJECT_FIELD]: (fieldConfig, _fieldName, typeName) => {
+          dlog('resolve');
+          const authDirective =
+            getDirective(schema, fieldConfig, directiveName)?.[0] ||
+            typeDirectiveArgumentMaps[typeName];
 
-      field.resolve = async (...args) => {
-        dlog('resolving');
-        const requiredRole =
-          field._requiredAuthRole || objectType._requiredAuthRole;
+          if (authDirective) {
+            const { requires } = authDirective;
 
-        if (!requiredRole) {
-          return resolve.apply(this, args);
-        }
+            if (requires) {
+              const { resolve = defaultFieldResolver } = fieldConfig;
 
-        const context = args[2];
-        const { user } = context;
+              // eslint-disable-next-line no-param-reassign
+              fieldConfig.resolve = (source, args, context, info) => {
+                const { user } = context;
 
-        if (!user) {
-          dlog('no user destructured from context');
-          throw new ForbiddenError('context contains no user.');
-        }
+                if (!user) {
+                  dlog('no user destructured from context');
+                  throw new ForbiddenError('context contains no user.');
+                }
 
-        dlog('user perm %o', user.permissions);
+                dlog('user perm %o', user.permissions);
 
-        if (!user.permissions) {
-          dlog('user does not have any permissions defined');
-          throw new ForbiddenError('this user has no permissions.');
-        }
+                if (!user.permissions) {
+                  dlog('user does not have any permissions defined');
+                  throw new ForbiddenError('this user has no permissions.');
+                }
 
-        if (!user.permissions.includes(requiredRole)) {
-          dlog(
-            'This user does not have the required role to access the resource.',
-          );
+                if (!user.permissions.includes(requires)) {
+                  dlog(
+                    'This user does not have the required role to access the resource.',
+                  );
 
-          throw new ForbiddenError(
-            'not authorized to perform requested action',
-          );
-        }
+                  throw new ForbiddenError(
+                    'not authorized to perform requested action',
+                  );
+                }
 
-        return resolve.apply(this, args);
-      };
-    });
-  }
+                return resolve(source, args, context, info);
+              };
+
+              return fieldConfig;
+            }
+          }
+        },
+      }),
+  };
 }
 
-export default AuthDirective;
+export default authDirectiveMapper;

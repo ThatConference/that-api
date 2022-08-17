@@ -1,8 +1,10 @@
 # that-api
 
+> **Warning**: This is v3 of `that-api`. It's intended use is with Apollo server version 3. It is not compatible with Apollo server v2. V2 of this library is [here](https://github.com/ThatConference/that-api/tree/v2). ⚠
+
 Shared component library for the api microservices.
 
-@thatconference/api
+Available as an npm package: `@thatconference/api`
 
 ## Development guidelines
 
