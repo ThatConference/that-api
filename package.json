@@ -14,15 +14,18 @@
     "npm:publish": "npm publish ./__build__ --access public"
   },
   "engines": {
-    "node": "14.x"
+    "node": ">=14 <17"
+  },
+  "peerDependencies": {
+    "graphql": "^16.0.0 || ^17.0.0"
   },
   "dependencies": {
     "@adobe/node-fetch-retry": "^2.2.0",
+    "@graphql-tools/utils": "^8.10.0",
     "apollo-server": "^3.10.1",
     "auth0": "^2.42.0",
     "debug": "^4.3.4",
     "firebase-admin": "^11.0.1",
-    "graphql": "^16.5.0",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.1.4",
     "lodash": "^4.17.21",

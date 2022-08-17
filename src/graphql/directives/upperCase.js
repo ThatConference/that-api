@@ -1,22 +1,38 @@
-/* eslint-disable class-methods-use-this */
-/* eslint-disable no-param-reassign */
-/* eslint-disable no-underscore-dangle */
+import { mapSchema, getDirective, MapperKind } from '@graphql-tools/utils';
+import { defaultFieldResolver } from 'graphql';
+import debug from 'debug';
 
-import { SchemaDirectiveVisitor } from 'apollo-server';
+const dlog = debug('that:api:directive:upper');
 
-class UpperCaseDirective extends SchemaDirectiveVisitor {
-  visitFieldDefinition(field) {
-    // eslint-disable-next-line no-undef
-    const { resolve = defaultFieldResolver } = field;
-    // eslint-disable-next-line func-names
-    field.resolve = async function (...args) {
-      const result = await resolve.apply(this, args);
-      if (typeof result === 'string') {
-        return result.toUpperCase();
-      }
-      return result;
-    };
-  }
+function upperCaseDirectiveMapper(directiveName) {
+  return {
+    upperCaseDirectiveTransformer: schema =>
+      mapSchema(schema, {
+        [MapperKind.OBJECT_FIELD]: fieldConfig => {
+          const upperDirective = getDirective(
+            schema,
+            fieldConfig,
+            directiveName,
+          )?.[0];
+          if (upperDirective) {
+            const { resolve = defaultFieldResolver } = fieldConfig;
+            return {
+              ...fieldConfig,
+              async resolve(source, args, context, info) {
+                const result = await resolve(source, args, context, info);
+                if (typeof result === 'string') {
+                  dlog('setting value to upper case');
+                  return result.toUpperCase();
+                }
+
+                return result;
+              },
+            };
+          }
+          return undefined;
+        },
+      }),
+  };
 }
 
-export default UpperCaseDirective;
+export default upperCaseDirectiveMapper;
