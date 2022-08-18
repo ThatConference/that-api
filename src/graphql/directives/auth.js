@@ -6,8 +6,8 @@ const { defaultFieldResolver } = require('graphql');
 
 const dlog = debug('that:api:directive:auth');
 
-function authDirectiveMapper(directiveName) {
-  dlog('authDirectiveMapper called:', directiveName);
+function authDirectiveMapper(directiveName = 'auth') {
+  dlog('authDirectiveMapper called as %s', directiveName);
 
   const typeDirectiveArgumentMaps = {};
 
@@ -15,7 +15,7 @@ function authDirectiveMapper(directiveName) {
     authDirectiveTransformer: schema =>
       mapSchema(schema, {
         [MapperKind.TYPE]: type => {
-          dlog('type resolved', type);
+          dlog('type resolved: %s', type?.name);
 
           const authDirective = getDirective(schema, type, directiveName)?.[0];
 
@@ -27,9 +27,9 @@ function authDirectiveMapper(directiveName) {
         },
         // eslint-disable-next-line consistent-return
         [MapperKind.OBJECT_FIELD]: (fieldConfig, _fieldName, typeName) => {
-          dlog('resolve');
+          dlog('resolve %s', typeName);
           const authDirective =
-            getDirective(schema, fieldConfig, directiveName)?.[0] ||
+            getDirective(schema, fieldConfig, directiveName)?.[0] ??
             typeDirectiveArgumentMaps[typeName];
 
           if (authDirective) {
@@ -51,12 +51,13 @@ function authDirectiveMapper(directiveName) {
 
                 if (!user.permissions) {
                   dlog('user does not have any permissions defined');
-                  throw new ForbiddenError('this user has no permissions.');
+                  throw new ForbiddenError('user has no permissions.');
                 }
 
                 if (!user.permissions.includes(requires)) {
                   dlog(
-                    'This user does not have the required role to access the resource.',
+                    'user missing required role to access resource, %s',
+                    requires,
                   );
 
                   throw new ForbiddenError(
