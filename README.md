@@ -14,6 +14,10 @@ Available as an npm package: `@thatconference/api`
 
 `husky install` is put under npm:prepare by default, though it causes many issues with this babel generated product when publishing, etc. For now it has to be manual. Putting `husky install` under npm:postinstall, doesn't work as it will try to run when the package is installed in a project.
 
+Module `graphql` is now defined as a peerDependency and not installed 'dependency' of this module. Due to this the **Basic local testing** below isn't currently working. 
+
+`graphql`
+
 ## Basic local testing
 
 Use npm linking to test locally with this package.
@@ -86,10 +90,12 @@ When you unlink a package it removes it from packages.json, so we need to then a
 
 ### Utility
 
-- firstoreDateForge
+- firestoreDateForge
 - getValueAtPath
 
 ### API Constants
+
+Shard constants used across the api. The constants are in JavaScript object form.
 
 ### GraphQL
 
@@ -98,6 +104,31 @@ When you unlink a package it removes it from packages.json, so we need to then a
 - auth
 - lowerCase
 - upperCase
+
+**v3** requires a different way to map directives to your schema. The directive returns a `transformer` function which you pass the schema into and get an updated schema back.
+
+```js
+const schema = authDirectiveTransformer(
+   buildSubgraphSchema([{typeDefs, resolvers}]);
+)
+```
+
+For multiple directives use a reduce like so
+
+```js
+let schema = buildSubgraphSchema([{ typeDefs, resolvers }]);
+const directiveTransformers = [authDirectiveTransformer, lowerCaseDirectiveTransformer];
+
+schema = directiveTransformers.reduce((curSchema, transformer) => transformer(schema), schema)
+```
+
+**GraphQl schema** for directives
+
+```graphql
+directive @auth(requires: String!) on OBJECT | FIELD_DEFINITION
+directive @lowerCase on FIELD_DEFINITION
+directive @upperCase on FIELD_DEFINITION
+```
 
 #### Events
 

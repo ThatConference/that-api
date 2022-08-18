@@ -4,7 +4,9 @@ import debug from 'debug';
 
 const dlog = debug('that:api:directive:lower');
 
-function lowerCaseDirectiveMapper(directiveName) {
+function lowerCaseDirectiveMapper(directiveName = 'lowerCase') {
+  dlog('lowerCaseDirectiveMapper called as %s', directiveName);
+
   return {
     lowerCaseDirectiveTransformer: schema =>
       mapSchema(schema, {
@@ -15,6 +17,7 @@ function lowerCaseDirectiveMapper(directiveName) {
             directiveName,
           )?.[0];
           if (lowerDirective) {
+            dlog('resolve: %s', fieldConfig?.astNode?.name?.value);
             const { resolve = defaultFieldResolver } = fieldConfig;
             return {
               ...fieldConfig,
@@ -29,7 +32,7 @@ function lowerCaseDirectiveMapper(directiveName) {
             };
           }
 
-          return undefined;
+          return fieldConfig;
         },
       }),
   };

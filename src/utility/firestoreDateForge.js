@@ -97,7 +97,7 @@ function events(event) {
 }
 
 function votes(vote) {
-  dlog('firestoreDateFroge votes');
+  dlog('firestoreDateForge votes');
   const fields = ['createdAt', 'lastUpdatedAt'];
 
   return entityDateForge({ fields })(vote);
