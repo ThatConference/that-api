@@ -1,7 +1,7 @@
 {
   "name": "@thatconference/api",
   "description": "THAT-API shared library for all micro services",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "main": "index.js",
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
@@ -21,11 +21,11 @@
   },
   "dependencies": {
     "@adobe/node-fetch-retry": "^2.2.0",
+    "@google-cloud/firestore": "^6.0.0",
     "@graphql-tools/utils": "^8.10.0",
     "apollo-server": "^3.10.1",
     "auth0": "^2.42.0",
     "debug": "^4.3.4",
-    "firebase-admin": "^11.0.1",
     "jsonwebtoken": "^8.5.1",
     "jwks-rsa": "^2.1.4",
     "lodash": "^4.17.21",

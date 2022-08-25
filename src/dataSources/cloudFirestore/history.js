@@ -1,5 +1,5 @@
 import debug from 'debug';
-import * as fbAdmin from 'firebase-admin';
+import { Firestore } from '@google-cloud/firestore';
 
 const dlog = debug('that:api:datasources:firebase:history');
 
@@ -24,7 +24,7 @@ const history = dbInstance => {
     const newRecord = {
       data: stripeEvent,
       eventType: stripeEvent.type,
-      seenCount: fbAdmin.firestore.FieldValue.increment(1),
+      seenCount: Firestore.FieldValue.increment(1),
       lastSeenAt: new Date(),
     };
     dlog('writing record %o', newRecord);
@@ -40,7 +40,7 @@ const history = dbInstance => {
     const newRecord = {
       data: thatEvent,
       eventType: thatEvent.type,
-      seenCount: fbAdmin.firestore.FieldValue.increment(1),
+      seenCount: Firestore.FieldValue.increment(1),
       lastSeenAt: new Date(),
     };
     dlog('writing record %o', newRecord);
