@@ -15,7 +15,7 @@ export default function graphCdnEvents(Sentry) {
   const graphCdn = getGraphCdn();
   dlog('graphCDN emitter created');
 
-  if (!Sentry?.Severity) {
+  if (Sentry?.SDK_VERSION?.length < 2) {
     throw new Error(
       'A valid, initialized `@sentry/node` object is required to instantiate emitter',
     );
