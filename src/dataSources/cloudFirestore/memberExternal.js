@@ -33,10 +33,24 @@ const member = dbInstance => {
 
   function batchFind(memberIds) {
     if (!Array.isArray(memberIds))
-      throw new Error('getBatch parmeter, memberIds, must be in an array');
+      throw new Error('getBatch parmeter, memberIds, must be an array');
     dlog('get many members (batch),  %d', memberIds.length);
-    const getFuncs = memberIds.map(m => get(m));
-    return Promise.all(getFuncs);
+    const docRefs = memberIds.map(id =>
+      dbInstance.doc(`${collectionName}/${id}`),
+    );
+    return dbInstance.getAll(...docRefs).then(docSnaps =>
+      docSnaps.map(docSnap => {
+        let result = null;
+        if (docSnap.exists) {
+          result = {
+            id: docSnap.id,
+            ...docSnap.data(),
+          };
+          result = memberDateForge(result);
+        }
+        return result;
+      }),
+    );
   }
 
   async function update({ memberId, profile, updatedBy }) {
