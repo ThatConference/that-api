@@ -35,7 +35,20 @@ const product = dbInstance => {
     dlog('getBatch called %d ids', ids.length);
     if (!Array.isArray(ids))
       throw new Error('getBatch must receive an array of ids');
-    return Promise.all(ids.map(id => get(id)));
+    const docRefs = ids.map(id => productCollection.doc(id));
+    return dbInstance.getAll(...docRefs).then(docSnaps =>
+      docSnaps.map(docSnap => {
+        let result = null;
+        if (docSnap.exists) {
+          result = {
+            id: docSnap.id,
+            ...docSnap.data(),
+          };
+          result = productDateForge(result);
+        }
+        return result;
+      }),
+    );
   }
 
   return { get, getBatch };
