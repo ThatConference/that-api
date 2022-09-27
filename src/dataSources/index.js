@@ -6,6 +6,7 @@ import product from './cloudFirestore/product';
 import history from './cloudFirestore/history';
 import event from './cloudFirestore/event';
 import eventSpeaker from './cloudFirestore/eventSpeaker';
+import partner from './cloudFirestore/partner';
 
 export default {
   cloudFirestore: {
@@ -17,5 +18,6 @@ export default {
     history,
     event,
     eventSpeaker,
+    partner,
   },
 };
