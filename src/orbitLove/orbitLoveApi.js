@@ -41,19 +41,21 @@ export default function orbitLoveApi({ firestore }) {
       retryInitialDelay: 250,
       retryBackoff: 4.0,
     })
-      .then(res => {
+      .then(async res => {
         if (res.ok) return res.json();
         if (res.status === 422)
           return {
             statusText: res.statusText,
             status: 422,
-            err: res.json(),
+            err: await res.json(),
           };
         throw new Error(`Request Error: ${res.statusText}`);
       })
       .then(json => {
         if (json.err)
-          throw new Error(`${json.status}:${json.statusText}:${json.err}`);
+          throw new Error(
+            `status ${json.status}:${JSON.stringify(json?.err?.errors)}`,
+          );
         return json;
       });
   }
