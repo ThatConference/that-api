@@ -22,5 +22,5 @@
     "jest/valid-expect": "error"
   },
   "plugins": ["jest"],
-  "parser": "babel-eslint"
+  "parser": "@babel/eslint-parser"
 }
