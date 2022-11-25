@@ -3,7 +3,7 @@ import debug from 'debug';
 // import { dataSources } from '@thatconference/api';
 import favCacheFn from '../dataSources/cloudFirestore/favoritesCache';
 
-const dlog = debug('that:api:sessions:events:favorites');
+const dlog = debug('that:api:sessions:events:favCache');
 
 export default function favoritesEvent({ firestore, sentry }) {
   const favEventEmitter = new EventEmitter();
@@ -13,7 +13,7 @@ export default function favoritesEvent({ firestore, sentry }) {
     dlog('purging/deleting cache for %s', memberId);
     try {
       const favCacheStore = favCacheFn(firestore);
-      return favCacheStore.delete(memberId);
+      return favCacheStore.deleteFavoritesCache(memberId);
     } catch (err) {
       return process.nextTick(() => favEventEmitter.emit('error', err));
     }

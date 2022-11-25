@@ -1,7 +1,7 @@
 {
   "name": "@thatconference/api",
   "description": "THAT-API shared library for all micro services",
-  "version": "3.4.1",
+  "version": "3.4.2",
   "main": "index.js",
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
