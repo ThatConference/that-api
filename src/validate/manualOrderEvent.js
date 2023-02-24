@@ -15,7 +15,7 @@ const manualOrderSchema = yup.object().shape({
     .string()
     .required()
     .matches(/^thatev_.*/, { message: 'invalid THAT event id' }),
-  eventId: yup.string().required().min(19),
+  eventId: yup.string().required().min(12),
   created: yup
     .string()
     .transform(epoch => epoch.toString())
@@ -23,7 +23,7 @@ const manualOrderSchema = yup.object().shape({
     .max(10),
   order: yup.object({
     createdBy: yup.string().required().min(9),
-    event: yup.string().required().min(19),
+    event: yup.string().required().min(12),
     lineItems: yup.array().min(1).max(6).required().of(lineItemSchema),
     member: yup.string().required().min(9),
     orderDate: yup.string().min(24).required(),
