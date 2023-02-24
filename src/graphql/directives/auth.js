@@ -1,5 +1,5 @@
 import { mapSchema, getDirective, MapperKind } from '@graphql-tools/utils';
-import { ForbiddenError } from 'apollo-server';
+import { GraphQLError } from 'graphql';
 import debug from 'debug';
 
 const { defaultFieldResolver } = require('graphql');
@@ -44,14 +44,18 @@ function authDirectiveMapper(directiveName = 'auth') {
 
                 if (!user) {
                   dlog('no user destructured from context');
-                  throw new ForbiddenError('context contains no user.');
+                  throw new GraphQLError('context contains no user', {
+                    extensions: { code: 'FORBIDDEN' },
+                  });
                 }
 
                 dlog('user perm %o', user.permissions);
 
                 if (!user.permissions) {
                   dlog('user does not have any permissions defined');
-                  throw new ForbiddenError('user has no permissions.');
+                  throw new GraphQLError('user has no permissions.', {
+                    extensions: { code: 'FORBIDDEN' },
+                  });
                 }
 
                 if (!user.permissions.includes(requires)) {
@@ -60,8 +64,11 @@ function authDirectiveMapper(directiveName = 'auth') {
                     requires,
                   );
 
-                  throw new ForbiddenError(
+                  throw new GraphQLError(
                     'not authorized to perform requested action',
+                    {
+                      extensions: { code: 'FORBIDDEN' },
+                    },
                   );
                 }
 

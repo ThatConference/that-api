@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events';
 import debug from 'debug';
-import fetch from 'node-fetch';
+import fetch from '@adobe/node-fetch-retry';
 
 import envConfig from '../../envConfig';
 
