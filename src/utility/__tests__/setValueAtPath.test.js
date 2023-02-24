@@ -82,5 +82,10 @@ describe('setValueAtPath tests', () => {
       expect(r.member.lastName).not.toBe('constructor');
       expect(r.member.lastName).toBe('Member');
     });
+    it(`will not write to constructor`, () => {
+      const preclone = JSON.stringify(clone);
+      const r = setValueAtPath(clone, 'constructor', 'nothing');
+      expect(preclone).toBe(JSON.stringify(r));
+    });
   });
 });
