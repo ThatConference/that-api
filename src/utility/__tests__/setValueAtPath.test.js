@@ -32,9 +32,13 @@ const baseObject = {
 
 describe('setValueAtPath tests', () => {
   let clone = {};
-  beforeEach(() => (clone = JSON.parse(JSON.stringify(baseObject))));
+  beforeEach(() => {
+    clone = JSON.parse(JSON.stringify(baseObject));
+  });
 
-  afterEach(() => (clone = {}));
+  afterEach(() => {
+    clone = {};
+  });
 
   describe('value updated at path', () => {
     it('will update data at top object level', () => {
@@ -64,6 +68,19 @@ describe('setValueAtPath tests', () => {
     it(`will create a deep level property if it doesn't exist`, () => {
       const r = setValueAtPath(clone, 'event.stats.days', 4);
       expect(r.event.stats.days).toBe(4);
+    });
+  });
+
+  describe(`don't mutate internal props`, () => {
+    it(`will not insert value __proto__`, () => {
+      const r = setValueAtPath(clone, 'member.firstName', '__proto__');
+      expect(r.member.firstName).not.toBe('__proto__');
+      expect(r.member.firstName).toBe('Sally');
+    });
+    it(`will not insert value constructor`, () => {
+      const r = setValueAtPath(clone, 'member.lastName', 'constructor');
+      expect(r.member.lastName).not.toBe('constructor');
+      expect(r.member.lastName).toBe('Member');
     });
   });
 });
