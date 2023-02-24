@@ -1,7 +1,7 @@
 import jsonwebtoken from 'jsonwebtoken';
 import debug from 'debug';
 import jwksClient from 'jwks-rsa';
-import { AuthenticationError } from 'apollo-server';
+import { GraphQLError } from 'graphql';
 
 const dlog = debug('that:api:jwt');
 
@@ -33,7 +33,11 @@ function jwt() {
       dlog('jwt verify called');
 
       if (!bearerToken) {
-        reject(new AuthenticationError('credentials_required'));
+        reject(
+          new GraphQLError('credentials_required', {
+            extensions: { code: 'UNAUTHENTICATED' },
+          }),
+        );
       }
 
       let token;
@@ -46,10 +50,18 @@ function jwt() {
         if (/^Bearer$/i.test(scheme)) {
           token = credentials;
         } else {
-          reject(new AuthenticationError('credentials_bad_scheme'));
+          reject(
+            new GraphQLError('credentials_bad_scheme', {
+              extensions: { code: 'UNAUTHENTICATED' },
+            }),
+          );
         }
       } else {
-        reject(new AuthenticationError('credentials_bad_format'));
+        reject(
+          new GraphQLError('credentials_bad_format', {
+            extensions: { code: 'UNAUTHENTICATED' },
+          }),
+        );
       }
 
       function getKey(header, callback) {

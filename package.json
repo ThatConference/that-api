@@ -1,7 +1,7 @@
 {
   "name": "@thatconference/api",
   "description": "THAT-API shared library for all micro services",
-  "version": "3.4.2",
+  "version": "4.0.0",
   "main": "index.js",
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
@@ -14,53 +14,50 @@
     "npm:publish": "npm publish ./__build__ --access public"
   },
   "engines": {
-    "node": ">=14 <17"
+    "node": ">=14 <19"
   },
   "peerDependencies": {
-    "graphql": "^16.0.0 || ^17.0.0"
+    "graphql": "^16.6.0"
   },
   "dependencies": {
     "@adobe/node-fetch-retry": "^2.2.0",
-    "@google-cloud/firestore": "^6.4.1",
-    "@graphql-tools/utils": "^9.1.1",
-    "apollo-server": "^3.11.1",
-    "auth0": "^2.44.0",
+    "@google-cloud/firestore": "^6.4.3",
+    "@graphql-tools/utils": "^9.2.1",
     "debug": "^4.3.4",
-    "jsonwebtoken": "^8.5.1",
-    "jwks-rsa": "^3.0.0",
+    "jsonwebtoken": "^9.0.0",
+    "jwks-rsa": "^3.0.1",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
-    "node-fetch": "~2.6.7",
     "request-ip": "^3.3.0",
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@babel/cli": "^7.19.3",
-    "@babel/core": "^7.20.2",
+    "@babel/cli": "^7.21.0",
+    "@babel/core": "^7.21.0",
     "@babel/eslint-parser": "^7.19.1",
-    "@babel/node": "^7.20.2",
+    "@babel/node": "^7.20.7",
     "@babel/preset-env": "^7.20.2",
-    "@babel/register": "^7.18.9",
+    "@babel/register": "^7.21.0",
     "babel-core": "^6.26.3",
-    "babel-jest": "^29.3.1",
+    "babel-jest": "^29.4.3",
     "concurrently": "^7.6.0",
     "dotenv": "^16.0.3",
-    "eslint": "~8.28.0",
+    "eslint": "^8.34.0",
     "eslint-config-airbnb-base": "^15.0.0",
-    "eslint-config-prettier": "^8.5.0",
+    "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-babel": "^5.3.1",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jest": "^27.1.5",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-jest": "^27.2.1",
     "eslint-plugin-prettier": "^4.2.1",
-    "husky": "^8.0.2",
-    "jest-cli": "^29.3.1",
+    "husky": "^8.0.3",
+    "jest-cli": "^29.4.3",
     "nodemon": "^2.0.20",
     "prettier-eslint": "^15.0.1",
     "prettier-eslint-cli": "^7.1.0"
   },
   "license": "gpl-3.0",
   "keywords": [
-    "node, react, auth0, graphql"
+    "node, graphql, auth, events, utils"
   ],
   "homepage": "https://www.thatconference.com",
   "bugs": {
