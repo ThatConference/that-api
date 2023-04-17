@@ -97,7 +97,49 @@ const member = dbInstance => {
     return Promise.all(ids.map(id => getIdType(id)));
   }
 
-  return { get, batchFind, update, findMemberByStripeCustId, getSecureBatch };
+  function getNotificationPreferenceFor({ preferenceName, preferenceValue }) {
+    dlog(
+      'getNotificationPreferenceFor called for preference %s with value %o',
+      preferenceName,
+      preferenceValue,
+    );
+    if (
+      preferenceName === null ||
+      preferenceName === undefined ||
+      typeof preferenceName !== 'string' ||
+      preferenceName.includes('.')
+    ) {
+      throw new Error('preferenceName must be and alpha string value');
+    }
+    if (
+      preferenceValue === null ||
+      preferenceValue === undefined ||
+      typeof preferenceValue !== 'boolean'
+    ) {
+      throw new Error('preferenceValue must be a boolean value');
+    }
+    return memberCollection
+      .where(`notificationPreferences.${preferenceName}`, '==', preferenceValue)
+      .get()
+      .then(querySnap =>
+        querySnap.docs.map(m => {
+          const r = {
+            id: m.id,
+            ...m.data(),
+          };
+          return memberDateForge(r);
+        }),
+      );
+  }
+
+  return {
+    get,
+    batchFind,
+    update,
+    findMemberByStripeCustId,
+    getSecureBatch,
+    getNotificationPreferenceFor,
+  };
 };
 
 export default member;
