@@ -79,6 +79,35 @@ const member = dbInstance => {
       );
   }
 
+  function findMemberBySlug(profileSlug) {
+    dlog('looking for member  by slug: %s', profileSlug);
+    return memberCollection
+      .where('profileSlug', '==', profileSlug)
+      .get()
+      .then(querySnap =>
+        querySnap.docs.map(m => {
+          const r = {
+            id: m.id,
+            ...m.data(),
+          };
+          return memberDateForge(r);
+        }),
+      );
+  }
+
+  function findMemberIdBySlug(profileSlug) {
+    dlog('looking for member  by slug: %s', profileSlug);
+    return memberCollection
+      .where('profileSlug', '==', profileSlug)
+      .select()
+      .get()
+      .then(querySnap =>
+        querySnap.docs.map(m => ({
+          id: m.id,
+        })),
+      );
+  }
+
   function getIdType(memberId) {
     return get(memberId).then(m => {
       let typename = 'PrivateProfile';
@@ -137,6 +166,8 @@ const member = dbInstance => {
     batchFind,
     update,
     findMemberByStripeCustId,
+    findMemberBySlug,
+    findMemberIdBySlug,
     getSecureBatch,
     getNotificationPreferenceFor,
   };
