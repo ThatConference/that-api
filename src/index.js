@@ -7,7 +7,9 @@ import datasourceImpl from './dataSources';
 import mentionsImpl from './mentions';
 import constantsImpl from './constants';
 import libImpl from './lib';
-import validateImpl from './validate';
+// required because babel would write the reference to this
+// as validateImpl.default which is incorrect.
+import * as validateImpl from './validate';
 import orbitLoveImpl from './orbitLove';
 
 export const security = securityImpl;
