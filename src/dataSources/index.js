@@ -8,6 +8,7 @@ import event from './cloudFirestore/event';
 import eventSpeaker from './cloudFirestore/eventSpeaker';
 import partner from './cloudFirestore/partner';
 import favoritesCache from './cloudFirestore/favoritesCache';
+import order from './cloudFirestore/order';
 
 export default {
   cloudFirestore: {
@@ -21,5 +22,6 @@ export default {
     eventSpeaker,
     partner,
     favoritesCache,
+    order,
   },
 };
