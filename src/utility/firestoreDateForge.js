@@ -89,6 +89,7 @@ function events(event) {
     'callForSpeakersCloseDate',
     'callForOnSpeakersOpenDate',
     'callForOnSpeakersCloseDate',
+    'ticketRefundEndDate',
     'ticketsOnSaleFrom',
     'ticketsOnSaleUntil',
   ];
