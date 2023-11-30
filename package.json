@@ -1,7 +1,7 @@
 {
   "name": "@thatconference/api",
   "description": "THAT-API shared library for all micro services",
-  "version": "4.4.0",
+  "version": "4.5.0",
   "main": "index.js",
   "scripts": {
     "build": "rimraf __build__ && babel ./src -d ./__build__ --copy-files --ignore ./**/__tests__",
@@ -14,15 +14,15 @@
     "npm:publish": "npm publish ./__build__ --access public"
   },
   "engines": {
-    "node": ">=14 <19"
+    "node": ">=16 <21"
   },
   "peerDependencies": {
     "graphql": "^16.7.1"
   },
   "dependencies": {
     "@adobe/node-fetch-retry": "^2.2.0",
-    "@google-cloud/firestore": "^6.8.0",
-    "@graphql-tools/utils": "^10.0.8",
+    "@google-cloud/firestore": "^7.1.0",
+    "@graphql-tools/utils": "^10.0.11",
     "debug": "^4.3.4",
     "jsonwebtoken": "^9.0.2",
     "jwks-rsa": "^3.1.0",
@@ -32,15 +32,15 @@
     "yup": "^0.32.11"
   },
   "devDependencies": {
-    "@babel/cli": "^7.23.0",
-    "@babel/core": "^7.23.3",
+    "@babel/cli": "^7.23.4",
+    "@babel/core": "^7.23.5",
     "@babel/eslint-parser": "^7.23.3",
     "@babel/node": "^7.22.19",
-    "@babel/preset-env": "^7.23.3",
+    "@babel/preset-env": "^7.23.5",
     "babel-jest": "^29.7.0",
     "concurrently": "^8.2.2",
     "dotenv": "^16.3.1",
-    "eslint": "^8.53.0",
+    "eslint": "^8.54.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-babel": "^5.3.1",
