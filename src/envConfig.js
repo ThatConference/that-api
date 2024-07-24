@@ -29,7 +29,7 @@ function getConfig() {
 function getGraphCdn() {
   return {
     token: process.env.GRAPHCDN_TOKEN || missingConfig('GRAPHCDN_TOKEN'),
-    api: process.env.GRAPHCDN_API || 'https://admin.graphcdn.io/that',
+    api: process.env.GRAPHCDN_API || 'https://admin.stellate.co/that',
   };
 }
 
